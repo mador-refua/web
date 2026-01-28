@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' data:;">
+
+    <title>מאגר שאלות - מדור רפואה</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .quiz-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .quiz-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            height: 10px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #48ff00 0%, #00ffd5 100%);
+            border-radius: 50px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 20px rgba(72, 255, 0, 0.5);
+        }
+
+        .progress-text {
+            margin-top: 8px;
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        /* Question */
+        .question-container {
+            padding: 40px 30px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2d3748;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        /* Answers */
+        .answers-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 3px solid transparent;
+            border-radius: 16px;
+            padding: 20px 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: right;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .answer-btn:hover {
+            transform: translateX(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .answer-btn:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #48ff00 0%, #00ffd5 100%);
+            color: white;
+            border-color: #48ff00;
+            animation: correctPulse 0.6s ease;
+        }
+
+        .answer-btn.wrong {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border-color: #ff6b6b;
+            animation: wrongShake 0.5s ease;
+        }
+
+        .answer-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Feedback */
+        .feedback {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, rgba(72, 255, 0, 0.1) 0%, rgba(0, 255, 213, 0.1) 100%);
+            border: 2px solid #48ff00;
+        }
+
+        .feedback.wrong {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 111, 0.1) 100%);
+            border: 2px solid #ff6b6b;
+        }
+
+        .feedback-icon {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .feedback-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        .feedback-tip {
+            font-size: 1.05em;
+            line-height: 1.7;
+            color: #2d3748;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        /* Next Button */
+        .next-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .next-btn.show {
+            display: block;
+            animation: slideUp 0.4s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading & Complete */
+        .loading, .complete {
+            text-align: center;
+            padding: 60px 30px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .complete-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .complete-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .complete-stats {
+            font-size: 1.2em;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+
+        .restart-btn, .home-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .restart-btn:hover, .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .home-btn {
+            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive - Mobile Optimized */
+        @media (max-width: 600px) {
+            body {
+                padding: 0;
+            }
+
+            .quiz-container {
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            .quiz-header {
+                padding: 20px 20px;
+            }
+
+            .quiz-title {
+                font-size: 1.5em;
+            }
+
+            .question-container {
+                padding: 25px 20px 100px 20px; /* Extra padding bottom for fixed button */
+            }
+
+            .question-text {
+                font-size: 1.1em;
+                margin-bottom: 20px;
+            }
+
+            .answer-btn {
+                padding: 14px 18px;
+                font-size: 0.95em;
+            }
+
+            .feedback {
+                margin-top: 20px;
+                padding: 15px;
+            }
+
+            .feedback-icon {
+                font-size: 1.2em;
+            }
+
+            .feedback-title {
+                font-size: 1.1em;
+            }
+
+            .feedback-tip {
+                font-size: 0.95em;
+                padding: 12px;
+            }
+
+            .next-btn {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: 0;
+                border-radius: 0;
+                padding: 16px;
+                font-size: 1.1em;
+                z-index: 1000;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <!-- Header -->
+        <div class="quiz-header">
+            <h1 class="quiz-title">📚 מאגר שאלות</h1>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">שאלה 0 מתוך 0</div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>טוען שאלות...</div>
+        </div>
+
+        <!-- Question Container -->
+        <div class="question-container" id="questionContainer" style="display: none;">
+            <div class="question-number" id="questionNumber">שאלה 1</div>
+            <div class="question-text" id="questionText"></div>
+
+            <div class="answers-grid" id="answersGrid"></div>
+
+            <div class="feedback" id="feedback">
+                <div class="feedback-icon" id="feedbackIcon"></div>
+                <div class="feedback-title" id="feedbackTitle"></div>
+                <div class="feedback-tip" id="feedbackTip"></div>
+            </div>
+
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                שאלה הבאה ←
+            </button>
+        </div>
+
+        <!-- Complete Screen -->
+        <div class="complete" id="completeScreen" style="display: none;">
+            <div class="complete-icon">🎉</div>
+            <div class="complete-title">כל הכבוד!</div>
+            <div class="complete-stats" id="completeStats"></div>
+            <button class="restart-btn" onclick="restartQuiz()">התחל מחדש</button>
+            <button class="home-btn" onclick="goHome()">חזרה לתפריט</button>
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwEVk6OnEEpZqbNYbP_fbzVQcQgSkBeHCvY6-piO0QLkP6q4jaorsROOdq82m8915NF/exec';
+
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let correctCount = 0;
+        let answered = false;
+
+        // Sound effects (Data URLs - very small)
+        const correctSound = new Audio('data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
+        const wrongSound = new Audio('data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
+
+        // Load questions
+        async function loadQuestions() {
+            try {
+                console.log('🔄 טוען שאלות...');
+                const response = await fetch(QUESTIONS_URL);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'שגיאה בטעינת שאלות');
+                }
+
+                questions = data.questions.filter(q =>
+                    q.question && q.answer1 && q.answer2 && q.answer3 && q.answer4 && q.correct
+                );
+
+                // Shuffle questions
+                questions = shuffleArray(questions);
+
+                console.log(`✅ ${questions.length} שאלות נטענו`);
+                console.log('📋 דוגמה לשאלה:', questions[0]);
+
+                if (questions.length === 0) {
+                    throw new Error('לא נמצאו שאלות במערכת');
+                }
+
+                startQuiz();
+
+            } catch (error) {
+                console.error('❌ שגיאה:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div style="color: #ff6b6b; font-weight: 600;">
+                        ⚠️ שגיאה בטעינת שאלות<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Shuffle array
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Start quiz
+        function startQuiz() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        // Show current question
+        function showQuestion() {
+            answered = false;
+
+            const question = questions[currentQuestionIndex];
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+            // Update progress
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent =
+                `שאלה ${currentQuestionIndex + 1} מתוך ${questions.length}`;
+
+            // Update question
+            document.getElementById('questionNumber').textContent = `שאלה ${currentQuestionIndex + 1}`;
+            document.getElementById('questionText').textContent = question.question;
+
+            // Create answers
+            const answersGrid = document.getElementById('answersGrid');
+            answersGrid.innerHTML = '';
+
+            const answers = [
+                { text: question.answer1, num: 1 },
+                { text: question.answer2, num: 2 },
+                { text: question.answer3, num: 3 },
+                { text: question.answer4, num: 4 }
+            ];
+
+            answers.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.textContent = answer.text;
+                btn.onclick = () => selectAnswer(answer.num);
+                answersGrid.appendChild(btn);
+            });
+
+            // Hide feedback and next button
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('nextBtn').classList.remove('show');
+        }
+
+        // Select answer
+        function selectAnswer(selectedNum) {
+            if (answered) return;
+            answered = true;
+
+            const question = questions[currentQuestionIndex];
+            const correct = parseInt(question.correct);
+            const isCorrect = selectedNum === correct;
+
+            console.log('🔍 שאלה נוכחית:', question);
+            console.log('💡 TIP:', question.TIP);
+
+            // Update buttons
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach((btn, index) => {
+                btn.classList.add('disabled');
+                if (index + 1 === correct) {
+                    btn.classList.add('correct');
+                } else if (index + 1 === selectedNum && !isCorrect) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+            const feedbackTip = document.getElementById('feedbackTip');
+
+            feedback.classList.remove('correct', 'wrong');
+            feedback.classList.add(isCorrect ? 'correct' : 'wrong');
+            feedback.classList.add('show');
+
+            if (isCorrect) {
+                correctCount++;
+                feedbackIcon.textContent = '✅';
+                feedbackTitle.textContent = 'נכון מאוד!';
+                // Check if TIP exists and is not empty
+                const tip = question.TIP && question.TIP.toString().trim() !== '' ? question.TIP : 'תשובה מצוינת! המשך כך!';
+                feedbackTip.textContent = tip;
+                playSound(correctSound);
+            } else {
+                feedbackIcon.textContent = '❌';
+                feedbackTitle.textContent = 'לא נכון';
+                // Check if TIP exists and is not empty
+                const tip = question.TIP && question.TIP.toString().trim() !== '' ? question.TIP : 'לא נורא! למד מהטעות והמשך קדימה.';
+                feedbackTip.textContent = tip;
+                playSound(wrongSound);
+            }
+
+            // Show next button
+            document.getElementById('nextBtn').classList.add('show');
+        }
+
+        // Play sound
+        function playSound(sound) {
+            try {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log('Sound disabled'));
+            } catch (e) {
+                // Silent fail if sound blocked
+            }
+        }
+
+        // Next question
+        function nextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex >= questions.length) {
+                showComplete();
+            } else {
+                showQuestion();
+            }
+        }
+
+        // Show complete screen
+        function showComplete() {
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('completeScreen').style.display = 'block';
+
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            document.getElementById('completeStats').innerHTML = `
+                ענית נכון על <strong>${correctCount}</strong> מתוך <strong>${questions.length}</strong> שאלות<br>
+                <strong style="color: #667eea; font-size: 1.5em;">${percentage}%</strong>
+            `;
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            questions = shuffleArray(questions);
+            document.getElementById('completeScreen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            showQuestion();
+        }
+
+        // Go home
+        function goHome() {
+            window.location.href = 'exams.html';
+        }
+
+        // Load on start
+        window.addEventListener('load', loadQuestions);
+    </script>
+</body>
+</html>

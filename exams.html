@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:;">
+
+    <title>בחנים - מדור רפואה</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* סטיילים ייחודיים לעמוד קטגוריות */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .categories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .category-card {
+            display: flex;
+            align-items: center;
+            animation: fadeInUp 0.6s ease-in-out backwards;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-card:nth-child(1) { animation-delay: 0.3s; }
+        .category-card:nth-child(2) { animation-delay: 0.4s; }
+        .category-card:nth-child(3) { animation-delay: 0.5s; }
+
+        .category-icon {
+            font-size: 1.9rem;
+        }
+
+        .category-info {
+            flex: 1;
+            min-width: 0;
+            text-align: right;
+        }
+
+        .category-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #5D4E37;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .category-subtitle {
+            font-size: 0.95rem;
+            color: #8B7355;
+            font-weight: 500;
+        }
+
+        .coming-soon-badge {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 8px;
+            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* כרטיס לא פעיל */
+        .category-card.inactive {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .category-card.inactive:hover {
+            transform: none;
+            box-shadow:
+                0 4px 20px rgba(139, 69, 19, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-buttons">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="home-btn" onclick="goHome()">🏠</button>
+            </div>
+            <h1 class="page-title">בחנים</h1>
+            <div class="header-logos">
+                <img src="Assets/logo1.PNG" alt="Logo 1">
+                <img src="Assets/logo2.PNG" alt="Logo 2">
+            </div>
+        </div>
+
+        <div class="categories-list">
+            <!-- מטפל מחלץ -->
+            <div class="category-card card" onclick="openCategory('metapel')">
+                <div class="category-icon card-icon">🚑</div>
+                <div class="category-info">
+                    <div class="category-title">מטפל מחלץ</div>
+                    <div class="category-subtitle">בחנים לחובש ומטפל בכיר</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+
+            <!-- מאגר כללי -->
+            <div class="category-card card" onclick="window.location.href='practice-questions.html'">
+                <div class="category-icon card-icon">📚</div>
+                <div class="category-info">
+                    <div class="category-title">מאגר כללי</div>
+                    <div class="category-subtitle">שאלות מכל התחומים</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+
+            <!-- אימון יחידתי -->
+            <div class="category-card card inactive">
+                <div class="category-icon card-icon">🎯</div>
+                <div class="category-info">
+                    <div class="category-title">אימון יחידתי</div>
+                    <div class="category-subtitle">תרגול לפי יחידה</div>
+                </div>
+                <span class="coming-soon-badge">בקרוב</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCategory(category) {
+            if (category === 'metapel') {
+                window.location.href = 'exams-metapel.html';
+            }
+            // שאר הקטגוריות יבנו בעתיד
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // מניעת זום כפול
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

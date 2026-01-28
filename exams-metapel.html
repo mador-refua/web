@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
+
+    <title>בחנים מטפל מחלץ - מדור רפואה</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* סטיילים ייחודיים לעמוד המבחנים */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .exams-list {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .exam-card {
+            display: flex;
+            align-items: center;
+            animation: fadeInUp 0.6s ease-in-out backwards;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .exam-card:nth-child(1) { animation-delay: 0.3s; }
+        .exam-card:nth-child(2) { animation-delay: 0.4s; }
+        .exam-card:nth-child(3) { animation-delay: 0.5s; }
+        .exam-card:nth-child(4) { animation-delay: 0.6s; }
+
+        /* מבחן חסום */
+        .exam-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+            filter: grayscale(60%);
+        }
+
+        .exam-card.locked:hover {
+            transform: none !important;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* אייקון מנעול */
+        .lock-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2.2em;
+            z-index: 10;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .exam-icon {
+            font-size: 1.9rem;
+        }
+
+        .exam-info {
+            flex: 1;
+            min-width: 0;
+            text-align: right;
+        }
+
+        /* מצב טעינה */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            color: white;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-buttons">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="home-btn" onclick="goHome()">🏠</button>
+            </div>
+            <h1 class="page-title">מטפל מחלץ</h1>
+            <div class="header-logos">
+                <img src="Assets/logo1.PNG" alt="Logo 1">
+                <img src="Assets/logo2.PNG" alt="Logo 2">
+            </div>
+        </div>
+
+        <div class="exams-list">
+            <!-- מבחן פתיחה חובש -->
+            <div class="exam-card" data-exam="מבחן פתיחה חובש" data-file="exam-hovesh-1.html">
+                <div class="exam-icon">🩹</div>
+                <div class="exam-info">
+                    <div class="exam-title">מבחן פתיחה חובש</div>
+                    <div class="exam-subtitle">25 שאלות · טראומה וחילוץ</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+
+            <!-- מבחן סיום חובש -->
+            <div class="exam-card" data-exam="מבחן סיום חובש" data-file="exam-hovesh-2.html">
+                <div class="exam-icon">✅</div>
+                <div class="exam-info">
+                    <div class="exam-title">מבחן סיום חובש</div>
+                    <div class="exam-subtitle">מבחן גמר מלא</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+
+            <!-- מבחן פתיחה מטב -->
+            <div class="exam-card" data-exam="מבחן פתיחה מט״ב" data-file="exam-metav-1.html">
+                <div class="exam-icon">👨‍⚕️</div>
+                <div class="exam-info">
+                    <div class="exam-title">מבחן פתיחה מט״ב</div>
+                    <div class="exam-subtitle">מבחן מקדים מטפל בכיר</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+
+            <!-- מבחן סיום מטב -->
+            <div class="exam-card" data-exam="מבחן סיום מט״ב" data-file="exam-metav-2.html">
+                <div class="exam-icon">🏆</div>
+                <div class="exam-info">
+                    <div class="exam-title">מבחן סיום מט״ב</div>
+                    <div class="exam-subtitle">מבחן גמר מטפל בכיר</div>
+                </div>
+                <span class="exam-badge">פעיל</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- מסך טעינה -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>טוען מבחנים...</p>
+        </div>
+    </div>
+
+    <script>
+        // URL של ה-Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBNcJzP2AIhXbVwYj-oDLmw_w0EPfPIqEuaX_rIsNj1ElMBgd30Fw2EHQ7hHubIIEw8g/exec';
+
+        // טעינת סטטוס המבחנים
+        async function loadExamStatuses() {
+            try {
+                console.log('📡 טוען סטטוס מבחנים...');
+                const response = await fetch(SCRIPT_URL + '?sheet=switch');
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'שגיאה בטעינת סטטוס מבחנים');
+                }
+
+                const switches = data.switches;
+                console.log('✅ סטטוסים נטענו:', switches);
+
+                // עבור כל כרטיס מבחן
+                document.querySelectorAll('.exam-card').forEach(card => {
+                    const examName = card.getAttribute('data-exam');
+                    const examFile = card.getAttribute('data-file');
+                    const status = switches[examName];
+
+                    if (status === 'OFF') {
+                        // נעילת המבחן
+                        card.classList.add('locked');
+
+                        // הוספת אייקון מנעול
+                        const lockIcon = document.createElement('div');
+                        lockIcon.className = 'lock-icon';
+                        lockIcon.innerHTML = '🔒';
+                        card.insertBefore(lockIcon, card.firstChild);
+
+                        // שינוי הבאדג'
+                        const badge = card.querySelector('.exam-badge');
+                        if (badge) {
+                            badge.textContent = 'חסום';
+                            badge.style.background = 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)';
+                        }
+
+                        // חסימת לחיצה
+                        card.onclick = (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            alert('🔒 מבחן זה אינו זמין כרגע.\nפנה למדריך לפרטים נוספים.');
+                        };
+                    } else {
+                        // מבחן פעיל
+                        card.onclick = () => {
+                            window.location.href = examFile;
+                        };
+                    }
+                });
+
+                // הסתרת מסך הטעינה
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+            } catch (error) {
+                console.error('❌ שגיאה בטעינת סטטוס מבחנים:', error);
+                document.getElementById('loadingOverlay').innerHTML = `
+                    <div class="loading-spinner">
+                        <p>⚠️ שגיאה בטעינת המבחנים</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">${error.message}</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: white; color: #333; border: none; border-radius: 8px; cursor: pointer; font-family: 'Rubik', sans-serif; font-weight: 600;">נסה שוב</button>
+                    </div>
+                `;
+            }
+        }
+
+        // הפעלה בטעינת העמוד
+        window.addEventListener('DOMContentLoaded', loadExamStatuses);
+
+        function goBack() {
+            window.location.href = 'exams.html';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // מניעת זום כפול
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>

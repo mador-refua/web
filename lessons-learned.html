@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+
+    <title>לקחים מאירועים - מדור רפואה</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* סטיילים ייחודיים לעמוד לקחים מאירועים - רשת כרטיסים */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
+            padding-bottom: 20px;
+        }
+
+        .document-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out backwards;
+            min-height: 160px;
+        }
+
+        .document-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, transparent 70%);
+            opacity: 0;
+            transition: all 0.4s ease;
+            transform: scale(0);
+        }
+
+        .document-card:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 10px rgba(220, 38, 38, 0.12);
+        }
+
+        .document-card:active::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .document-emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+            display: block;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .document-card:active .document-emoji {
+            transform: scale(1.1);
+        }
+
+        .document-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #7f1d1d;
+            line-height: 1.3;
+            word-break: break-word;
+            hyphens: auto;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pdf-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* מסך טעינה */
+        .loading-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(239, 68, 68, 0.2);
+            border-top: 3px solid #ef4444;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #7f1d1d;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #991b1b;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (min-width: 400px) {
+            .documents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 16px;
+            }
+
+            .document-card {
+                padding: 24px 18px;
+                min-height: 180px;
+            }
+
+            .document-emoji {
+                font-size: 3.5rem;
+            }
+
+            .document-title {
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (min-width: 600px) {
+            .documents-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-buttons">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="home-btn" onclick="goHome()">
+                    🏠
+                </button>
+            </div>
+            <h1 class="page-title">לקחים מאירועים</h1>
+            <div class="header-logos">
+                <img src="Assets/logo1.PNG" alt="Logo 1">
+                <img src="Assets/logo2.PNG" alt="Logo 2">
+            </div>
+        </div>
+
+        <!-- מסך טעינה -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">טוען מסמכים...</div>
+        </div>
+
+        <!-- הודעת שגיאה -->
+        <div id="error-screen" style="display: none;">
+            <div class="error-message">
+                <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
+                <div id="error-text">שגיאה בטעינת המסמכים</div>
+            </div>
+        </div>
+
+        <!-- רשת מסמכים -->
+        <div id="documents-grid" class="documents-grid" style="display: none;"></div>
+    </div>
+
+    <script>
+        // כתובת ה-Apps Script שיחזיר את רשימת המסמכים
+        const DOCUMENTS_URL = 'https://script.google.com/macros/s/AKfycbxeoeAGrR2LS1Mi4n1DUDAW8pBMehzcwtLn1A3qVTnY4a10-j09e9C-tSXrPehv1o6P/exec';
+
+        let documents = [];
+        let lastLoadTime = 0;
+        const RATE_LIMIT_MS = 2000; // מינימום 2 שניות בין טעינות
+
+        // בדיקת URL תקין ובטוח
+        function isValidUrl(url) {
+            if (!url || typeof url !== 'string') return false;
+
+            try {
+                const urlObj = new URL(url);
+                // רק HTTPS וממקורות מהימנים
+                return urlObj.protocol === 'https:' &&
+                       (urlObj.hostname === 'drive.google.com' ||
+                        urlObj.hostname === 'script.google.com' ||
+                        urlObj.hostname === 'script.googleusercontent.com');
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // טעינת מסמכים מ-Google Sheets
+        async function loadDocuments() {
+            // Rate limiting
+            const now = Date.now();
+            if (now - lastLoadTime < RATE_LIMIT_MS) {
+                console.warn('⏱️ המתן לפני טעינה מחדש');
+                return;
+            }
+            lastLoadTime = now;
+
+            console.log('🔄 מתחיל טעינת מסמכים...');
+            console.log('📍 URL:', DOCUMENTS_URL);
+
+            try {
+                console.log('📡 שולח בקשה ל-Google Apps Script...');
+                const response = await fetch(DOCUMENTS_URL);
+
+                console.log('📊 תגובה התקבלה. Status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`שגיאת שרת: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 נתונים:', data);
+
+                if (!data.success) {
+                    console.error('❌ data.success = false');
+                    throw new Error(data.error || 'שגיאה בטעינת נתונים');
+                }
+
+                console.log(`📋 ${data.documents?.length || 0} מסמכים נמצאו`);
+
+                // סינון וולידציה של המסמכים
+                documents = (data.documents || [])
+                    .filter(d => {
+                        const valid = d.title && d.title.trim() !== '' && d.url;
+                        if (!valid) console.warn('⚠️ מסמך לא תקין:', d);
+                        return valid;
+                    })
+                    .filter(d => {
+                        const valid = isValidUrl(d.url);
+                        if (!valid) console.warn('⚠️ URL לא תקין:', d.url);
+                        return valid;
+                    })
+                    .map(d => ({
+                        title: String(d.title).substring(0, 150),
+                        emoji: String(d.emoji || '🚨').substring(0, 10),
+                        url: d.url
+                    }));
+
+                console.log(`✅ ${documents.length} מסמכים תקינים`);
+
+                if (documents.length === 0) {
+                    throw new Error('לא נמצאו מסמכים תקינים');
+                }
+
+                displayDocuments();
+
+            } catch (error) {
+                console.error('❌ שגיאה בטעינת מסמכים:', error);
+                console.error('📋 פרטי שגיאה:', error.message, error.stack);
+                showError('לא ניתן לטעון את המסמכים כרגע. אנא נסה שוב מאוחר יותר.');
+            }
+        }
+
+        // escape HTML לאבטחה
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+
+        // הצגת מסמכים
+        function displayDocuments() {
+            const container = document.getElementById('documents-grid');
+            container.innerHTML = '';
+
+            documents.forEach((doc, index) => {
+                const docCard = document.createElement('div');
+                docCard.className = 'document-card';
+                docCard.style.animationDelay = `${0.1 + index * 0.05}s`;
+
+                docCard.innerHTML = `
+                    <span class="pdf-badge">PDF</span>
+                    <span class="document-emoji">${doc.emoji || '🚨'}</span>
+                    <div class="document-title">${escapeHtml(doc.title)}</div>
+                `;
+
+                docCard.onclick = function() {
+                    openDocument(doc.url);
+                };
+
+                container.appendChild(docCard);
+            });
+
+            // הסתרת מסך טעינה והצגת רשת
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('documents-grid').style.display = 'grid';
+
+            console.log(`✅ ${documents.length} מסמכים מוצגים בממשק`);
+        }
+
+        // הצגת שגיאה
+        function showError(message) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('error-screen').style.display = 'block';
+            document.getElementById('error-text').textContent = message;
+        }
+
+        // פתיחת מסמך
+        function openDocument(url) {
+            // ולידציה נוספת לפני פתיחה
+            if (!isValidUrl(url)) {
+                console.error('URL לא תקין');
+                alert('קישור לא תקין');
+                return;
+            }
+
+            // פתיחה עם אבטחה
+            const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+            if (newWindow) {
+                newWindow.opener = null; // מניעת גישה לחלון המקורי
+            }
+        }
+
+        // חזרה
+        function goBack() {
+            // בדיקה שיש היסטוריה
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                goHome();
+            }
+        }
+
+        // חזרה לבית
+        function goHome() {
+            // מניעת open redirect
+            window.location.href = './index.html';
+        }
+
+        // מניעת זום כפול
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // טעינה בעת העלאת הדף
+        window.addEventListener('load', loadDocuments);
+    </script>
+</body>
+</html>

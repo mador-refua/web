@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 דאשבורד סטטיסטיקות - מדור רפואה</title>
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://script.google.com;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com;
+        img-src 'self' data: https:;
+        connect-src 'self' https://script.google.com https://script.googleusercontent.com;
+    ">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+            min-height: 100vh;
+            padding: 15px;
+            color: #2d3748;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                padding: 16px;
+                border-radius: 10px;
+            }
+        }
+
+        .stat-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .label {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out 0.3s both;
+        }
+
+        .filters h3 {
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                padding: 15px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .filters h3 {
+                font-size: 1em;
+                margin-bottom: 12px;
+            }
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .filter-group {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        .filter-group select, .filter-group button, .filter-group input.date-filter {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            font-family: 'Rubik', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus, .filter-group input.date-filter:focus {
+            outline: none;
+            border-color: #ff9a56;
+        }
+
+        .filter-group input.date-filter {
+            background: white;
+            color: #2d3748;
+        }
+
+        .filter-group button {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .filter-group button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 154, 86, 0.4);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+            margin-bottom: 20px;
+        }
+
+        .chart-container h3 {
+            margin-bottom: 15px;
+            color: #2d3748;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                padding: 15px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+
+            .chart-container h3 {
+                font-size: 1.1em;
+                margin-bottom: 12px;
+            }
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+
+        .hardest-questions {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.6s ease-out 0.5s both;
+            margin-bottom: 25px;
+        }
+
+        .hardest-questions h3 {
+            margin-bottom: 10px;
+            color: #2d3748;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .hardest-questions {
+                padding: 15px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+            }
+
+            .hardest-questions h3 {
+                font-size: 1.1em;
+            }
+        }
+
+        .question-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+            border-right: 4px solid #fc8181;
+            transition: transform 0.2s ease;
+        }
+
+        .question-item:hover {
+            transform: translateX(-5px);
+            background: #edf2f7;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2d3748;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .question-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .badge-trauma {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .badge-rescue {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .badge-easy {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .badge-medium {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .badge-hard {
+            background: #fbb6ce;
+            color: #97266d;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: white;
+            color: #667eea;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* מודל סיסמה */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .password-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .password-box h2 {
+            margin-bottom: 10px;
+            color: #2d3748;
+            font-size: 1.8em;
+        }
+
+        .password-box p {
+            margin-bottom: 25px;
+            color: #718096;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: 'Rubik', sans-serif;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #ff9a56;
+        }
+
+        .password-input.error {
+            border-color: #fc8181;
+            animation: shake 0.5s ease;
+        }
+
+        .password-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            font-family: 'Rubik', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 154, 86, 0.4);
+        }
+
+        .password-submit:active {
+            transform: translateY(0);
+        }
+
+        .password-back {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #718096;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 500;
+            font-family: 'Rubik', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .password-back:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+            color: #4a5568;
+        }
+
+        .error-message {
+            color: #fc8181;
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* פאנל בקרת מבחנים */
+        .exam-control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .exam-control-panel h3 {
+            font-size: 1.5em;
+            color: #2d3748;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .exam-control-panel > p {
+            color: #718096;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+
+        .exam-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .exam-item {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 12px;
+            padding: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .exam-item:hover {
+            border-color: #ff9a56;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 154, 86, 0.15);
+        }
+
+        .exam-item-info {
+            flex: 1;
+        }
+
+        .exam-item-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+
+        .exam-item-status {
+            font-size: 0.85em;
+            color: #718096;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e0;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            right: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b6b 100%);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(-30px);
+        }
+
+        input:disabled + .toggle-slider {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* מסך טעינה לפאנל */
+        .exam-control-loading {
+            text-align: center;
+            padding: 30px;
+            color: #718096;
+        }
+
+        .exam-control-loading .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #ff9a56;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .back-button {
+                bottom: 20px;
+                left: 20px;
+                padding: 12px 20px;
+            }
+
+            .exam-control-panel {
+                padding: 20px;
+            }
+
+            .exam-items {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- מודל סיסמה -->
+    <div id="passwordModal" class="password-modal">
+        <div class="password-box">
+            <h2>🔒 גישה למדריכים בלבד</h2>
+            <p>הזן סיסמה לצפייה בסטטיסטיקות</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="סיסמה" autocomplete="off">
+            <button onclick="checkPassword()" class="password-submit">כניסה</button>
+            <button onclick="window.location.href='index.html'" class="password-back">חזרה לעמוד הבית</button>
+            <div id="errorMessage" class="error-message">סיסמה שגויה, נסה שנית</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>📊 דאשבורד סטטיסטיקות מבחנים</h1>
+            <p>ניתוח ביצועים ותובנות - מדור רפואה</p>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            טוען נתונים...
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <!-- פאנל בקרת מבחנים -->
+            <div class="exam-control-panel">
+                <h3>🎮 בקרת מבחנים</h3>
+                <p>הפעל או השבת מבחנים לנבחנים בזמן אמת</p>
+
+                <div id="exam-control-loading" class="exam-control-loading">
+                    <div class="spinner"></div>
+                    <div>טוען סטטוס מבחנים...</div>
+                </div>
+
+                <div id="exam-items" class="exam-items" style="display: none;">
+                    <!-- יווצר דינמית -->
+                </div>
+            </div>
+
+            <!-- סטטיסטיקות כלליות -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="icon">📝</div>
+                    <div class="label">סה"כ תשובות</div>
+                    <div class="value" id="total-answers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">👥</div>
+                    <div class="label">נבחנים (הערכה)</div>
+                    <div class="value" id="total-students">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="icon">✅</div>
+                    <div class="label">אחוז הצלחה כללי</div>
+                    <div class="value" id="success-rate">0%</div>
+                </div>
+            </div>
+
+            <!-- שאלות קשות -->
+            <div class="hardest-questions">
+                <h3>🔥 5 השאלות הקשות ביותר</h3>
+                <p style="color: #718096; font-size: 0.9em; margin-bottom: 15px;">
+                    * דורש לפחות 3 תשובות לכל שאלה להפקת הסטטיסטיקה
+                </p>
+                <div id="hardest-list"></div>
+            </div>
+
+            <!-- פילטרים -->
+            <div class="filters">
+                <h3>🔍 סינון נתונים</h3>
+                <div class="filter-group">
+                    <select id="filter-exam">
+                        <option value="all">כל המבחנים</option>
+                        <option value="מבחן פתיחה חובש">מבחן פתיחה חובש</option>
+                        <option value="מבחן סיום חובש">מבחן סיום חובש</option>
+                        <option value="מבחן פתיחה מט״ב">מבחן פתיחה מט״ב</option>
+                        <option value="מבחן סיום מט״ב">מבחן סיום מט״ב</option>
+                    </select>
+                    <select id="filter-topic">
+                        <option value="all">כל הנושאים</option>
+                        <option value="trauma">טראומה</option>
+                        <option value="rescue">חילוץ</option>
+                    </select>
+                    <select id="filter-difficulty">
+                        <option value="all">כל הרמות</option>
+                        <option value="Easy">קל</option>
+                        <option value="Medium">בינוני</option>
+                        <option value="Hard">קשה</option>
+                    </select>
+                    <input type="date" id="filter-date" class="date-filter" title="סינון לפי תאריך">
+                    <button onclick="applyFilters()">החל סינון</button>
+                    <button onclick="resetFilters()" style="background: #718096;">אפס סינון</button>
+                </div>
+            </div>
+
+            <!-- תרשימים -->
+            <div class="chart-container">
+                <h3>❌ שאלות שגויות לפי רמת קושי</h3>
+                <div class="chart-wrapper">
+                    <canvas id="difficultyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>🎯 אחוז הצלחה לפי שאלה (10 הנפוצות)</h3>
+                <div class="chart-wrapper" style="height: 500px;">
+                    <canvas id="questionsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-button">← חזרה לתפריט</a>
+
+    <script>
+        // 🔗 Apps Script URL לסטטיסטיקות (קובץ נפרד)
+        const STATISTICS_URL = 'https://script.google.com/macros/s/AKfycbwId2JjtTY3swtq80B8MUsJ_CrPQPzWKHL5l1zj8cAX2185dc9r4o-aClPRKOeGXuVUSQ/exec';
+        // 🔗 Apps Script URL למאגר שאלות (עם Switch)
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBNcJzP2AIhXbVwYj-oDLmw_w0EPfPIqEuaX_rIsNj1ElMBgd30Fw2EHQ7hHubIIEw8g/exec';
+        const CORRECT_PASSWORDS = ['רפואה2025', 'refua2025'];
+
+        let allData = [];
+        let filteredData = [];
+        let charts = {};
+        let isAuthenticated = false;
+
+        // בדיקת סיסמה
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const password = input.value;
+            const errorMsg = document.getElementById('errorMessage');
+
+            if (CORRECT_PASSWORDS.includes(password)) {
+                isAuthenticated = true;
+                document.getElementById('passwordModal').style.display = 'none';
+                loadData();
+                loadExamStatuses(); // טען גם את סטטוס המבחנים
+            } else {
+                input.classList.add('error');
+                errorMsg.classList.add('show');
+                input.value = '';
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 500);
+            }
+        }
+
+        // תמיכה ב-Enter
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('passwordInput');
+            passwordInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+            passwordInput.focus();
+        });
+
+        // טעינת נתונים
+        async function loadData() {
+            try {
+                console.log('📡 טוען סטטיסטיקות...');
+                const response = await fetch(STATISTICS_URL);
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'שגיאה בטעינת נתונים');
+                }
+
+                allData = data.statistics.filter(s => s.question_text && s.question_text.toString().trim() !== '');
+                filteredData = [...allData];
+
+                console.log(`✅ נטענו ${allData.length} רשומות`);
+
+                updateDashboard();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+
+            } catch (error) {
+                console.error('❌ שגיאה:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="spinner"></div>
+                    <p>שגיאה בטעינת נתונים: ${error.message}</p>
+                    <p>ודא שהגדרת את Apps Script נכון ושהגליון exam_statistics קיים.</p>
+                `;
+            }
+        }
+
+        // עדכון הדאשבורד
+        function updateDashboard() {
+            updateStats();
+            updateCharts();
+            updateHardestQuestions();
+        }
+
+        // עדכון סטטיסטיקות כלליות
+        function updateStats() {
+            const totalAnswers = filteredData.length;
+            const estimatedStudents = Math.ceil(totalAnswers / 25);
+            const correctAnswers = filteredData.filter(d => d.is_correct === true || d.is_correct === 'TRUE').length;
+            const successRate = totalAnswers > 0 ? Math.round((correctAnswers / totalAnswers) * 100) : 0;
+
+            document.getElementById('total-answers').textContent = totalAnswers.toLocaleString();
+            document.getElementById('total-students').textContent = estimatedStudents;
+            document.getElementById('success-rate').textContent = successRate + '%';
+        }
+
+        // עדכון תרשימים
+        function updateCharts() {
+            updateDifficultyChart();
+            updateQuestionsChart();
+        }
+
+        // תרשים קושי - שאלות שגויות
+        function updateDifficultyChart() {
+            const difficulties = ['Easy', 'Medium', 'Hard'];
+            const wrongCounts = difficulties.map(diff => {
+                const data = filteredData.filter(d => d.difficulty === diff);
+                const wrong = data.filter(d => d.is_correct === false || d.is_correct === 'FALSE').length;
+                return wrong;
+            });
+
+            if (charts.difficulty) charts.difficulty.destroy();
+
+            const ctx = document.getElementById('difficultyChart').getContext('2d');
+            charts.difficulty = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['קל', 'בינוני', 'קשה'],
+                    datasets: [{
+                        label: 'כמות שאלות שגויות',
+                        data: wrongCounts,
+                        backgroundColor: [
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 99, 71, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 71, 1)',
+                            'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                font: { family: 'Rubik', size: 12 },
+                                stepSize: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: 'Rubik', size: 13 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'שאלות שגויות: ' + context.parsed.y;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // תרשים שאלות
+        function updateQuestionsChart() {
+            // קיבוץ לפי שאלה
+            const questionStats = {};
+            filteredData.forEach(d => {
+                const q = d.question_text;
+                if (!questionStats[q]) {
+                    questionStats[q] = { total: 0, correct: 0 };
+                }
+                questionStats[q].total++;
+                if (d.is_correct === true || d.is_correct === 'TRUE') {
+                    questionStats[q].correct++;
+                }
+            });
+
+            // חישוב אחוז הצלחה
+            const questions = Object.keys(questionStats).map(q => ({
+                question: q,
+                rate: Math.round((questionStats[q].correct / questionStats[q].total) * 100),
+                total: questionStats[q].total
+            }));
+
+            // מיון לפי תדירות ולקיחת 10 הראשונות
+            questions.sort((a, b) => b.total - a.total);
+            const top10 = questions.slice(0, 10);
+
+            if (charts.questions) charts.questions.destroy();
+
+            const ctx = document.getElementById('questionsChart').getContext('2d');
+            charts.questions = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: top10.map(q => q.question.substring(0, 50) + '...'),
+                    datasets: [{
+                        label: 'אחוז הצלחה',
+                        data: top10.map(q => q.rate),
+                        backgroundColor: top10.map(q => {
+                            if (q.rate >= 80) return 'rgba(72, 187, 120, 0.8)';
+                            if (q.rate >= 60) return 'rgba(237, 137, 54, 0.8)';
+                            return 'rgba(252, 129, 129, 0.8)';
+                        }),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                font: { family: 'Rubik' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: { family: 'Rubik', size: 11 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return top10[context[0].dataIndex].question;
+                                },
+                                label: function(context) {
+                                    return 'אחוז הצלחה: ' + context.parsed.x + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // עדכון שאלות קשות
+        function updateHardestQuestions() {
+            const questionStats = {};
+            filteredData.forEach(d => {
+                const q = d.question_text;
+                if (!questionStats[q]) {
+                    questionStats[q] = {
+                        question: q,
+                        topic: d.topic,
+                        difficulty: d.difficulty,
+                        total: 0,
+                        correct: 0
+                    };
+                }
+                questionStats[q].total++;
+                if (d.is_correct === true || d.is_correct === 'TRUE') {
+                    questionStats[q].correct++;
+                }
+            });
+
+            const questions = Object.values(questionStats)
+                .filter(q => q.total >= 3) // לפחות 3 תשובות
+                .map(q => ({
+                    ...q,
+                    rate: Math.round((q.correct / q.total) * 100)
+                }))
+                .sort((a, b) => a.rate - b.rate)
+                .slice(0, 5);
+
+            const html = questions.map(q => `
+                <div class="question-item">
+                    <div class="question-text">${q.question}</div>
+                    <div class="question-meta">
+                        <span>
+                            📊 אחוז הצלחה: <strong>${q.rate}%</strong> (${q.correct}/${q.total})
+                        </span>
+                        <span>
+                            <span class="badge badge-${q.topic}">${q.topic === 'trauma' ? 'טראומה' : 'חילוץ'}</span>
+                        </span>
+                        <span>
+                            <span class="badge badge-${q.difficulty.toLowerCase()}">${
+                                q.difficulty === 'Easy' ? 'קל' :
+                                q.difficulty === 'Medium' ? 'בינוני' : 'קשה'
+                            }</span>
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('hardest-list').innerHTML = html || '<p style="text-align: center; color: #718096;">אין מספיק נתונים</p>';
+        }
+
+        // החלת פילטרים
+        function applyFilters() {
+            const exam = document.getElementById('filter-exam').value;
+            const topic = document.getElementById('filter-topic').value;
+            const difficulty = document.getElementById('filter-difficulty').value;
+            const filterDate = document.getElementById('filter-date').value;
+
+            filteredData = allData.filter(d => {
+                // סינון לפי מבחן
+                if (exam !== 'all' && d.exam_name !== exam) return false;
+
+                // סינון לפי נושא
+                if (topic !== 'all' && d.topic !== topic) return false;
+
+                // סינון לפי רמת קושי
+                if (difficulty !== 'all' && d.difficulty !== difficulty) return false;
+
+                // סינון לפי תאריך
+                if (filterDate) {
+                    const timestamp = d.timestamp;
+                    if (!timestamp) return false;
+
+                    // המרת timestamp למחרוזת תאריך (YYYY-MM-DD)
+                    let recordDate;
+                    if (timestamp instanceof Date) {
+                        recordDate = timestamp.toISOString().split('T')[0];
+                    } else {
+                        // אם זה מחרוזת תאריך
+                        recordDate = new Date(timestamp).toISOString().split('T')[0];
+                    }
+
+                    // בדיקה התאמה לתאריך המבוקש
+                    if (recordDate !== filterDate) return false;
+                }
+
+                return true;
+            });
+
+            console.log(`🔍 סינון: ${filteredData.length} מתוך ${allData.length} רשומות`);
+            updateDashboard();
+        }
+
+        // איפוס כל הפילטרים
+        function resetFilters() {
+            document.getElementById('filter-exam').value = 'all';
+            document.getElementById('filter-topic').value = 'all';
+            document.getElementById('filter-difficulty').value = 'all';
+            document.getElementById('filter-date').value = '';
+
+            filteredData = [...allData];
+            console.log('🔄 הפילטרים אופסו');
+            updateDashboard();
+        }
+
+        // הערה: loadData() נקרא רק אחרי הזנת סיסמה נכונה
+
+        // ==================== בקרת מבחנים ====================
+
+        const EXAM_NAMES = [
+            'מבחן פתיחה חובש',
+            'מבחן סיום חובש',
+            'מבחן פתיחה מט״ב',
+            'מבחן סיום מט״ב'
+        ];
+
+        // טעינת סטטוס מבחנים
+        async function loadExamStatuses() {
+            try {
+                console.log('📡 טוען סטטוס מבחנים...');
+                const response = await fetch(SCRIPT_URL + '?sheet=switch');
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'שגיאה בטעינת סטטוס מבחנים');
+                }
+
+                const switches = data.switches;
+                renderExamControls(switches);
+            } catch (error) {
+                console.error('❌ שגיאה בטעינת סטטוס מבחנים:', error);
+                document.getElementById('exam-control-loading').innerHTML = `
+                    <div style="color: #fc8181;">
+                        ⚠️ שגיאה בטעינת סטטוס מבחנים<br>
+                        <small>${error.message}</small>
+                    </div>
+                `;
+            }
+        }
+
+        // יצירת HTML לבקרת מבחנים
+        function renderExamControls(switches) {
+            const container = document.getElementById('exam-items');
+            container.innerHTML = '';
+
+            EXAM_NAMES.forEach(examName => {
+                const status = switches[examName] || 'ON';
+                const isOn = status === 'ON';
+
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'exam-item';
+                itemDiv.innerHTML = `
+                    <div class="exam-item-info">
+                        <div class="exam-item-name">${examName}</div>
+                        <div class="exam-item-status">${isOn ? '🟢 פעיל - נבחנים יכולים לגשת' : '🔴 חסום - נבחנים לא יכולים לגשת'}</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox"
+                               ${isOn ? 'checked' : ''}
+                               onchange="toggleExamStatus('${examName}', this.checked)"
+                               data-exam="${examName}">
+                        <span class="toggle-slider"></span>
+                    </label>
+                `;
+                container.appendChild(itemDiv);
+            });
+
+            // הסתר טעינה, הצג פאנל
+            document.getElementById('exam-control-loading').style.display = 'none';
+            container.style.display = 'grid';
+        }
+
+        // עדכון סטטוס מבחן
+        async function toggleExamStatus(examName, isOn) {
+            const newStatus = isOn ? 'ON' : 'OFF';
+            console.log(`🔄 מעדכן ${examName} ל-${newStatus}`);
+
+            // השבת את כל הטוגלים בזמן עדכון
+            const toggles = document.querySelectorAll('.toggle-switch input');
+            toggles.forEach(t => t.disabled = true);
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=updateSwitch&examName=${encodeURIComponent(examName)}&status=${newStatus}`
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'שגיאה בעדכון');
+                }
+
+                console.log('✅ סטטוס עודכן בהצלחה');
+
+                // עדכן את ה-UI
+                const statusDiv = document.querySelector(`input[data-exam="${examName}"]`)
+                    .closest('.exam-item')
+                    .querySelector('.exam-item-status');
+                statusDiv.textContent = isOn ? '🟢 פעיל - נבחנים יכולים לגשת' : '🔴 חסום - נבחנים לא יכולים לגשת';
+
+            } catch (error) {
+                console.error('❌ שגיאה בעדכון סטטוס:', error);
+                alert(`⚠️ שגיאה בעדכון סטטוס המבחן:\n${error.message}\n\nנסה שנית או רענן את הדף.`);
+
+                // החזר את הטוגל למצב הקודם
+                const toggle = document.querySelector(`input[data-exam="${examName}"]`);
+                toggle.checked = !isOn;
+            } finally {
+                // אפשר שוב את כל הטוגלים
+                toggles.forEach(t => t.disabled = false);
+            }
+        }
+    </script>
+</body>
+</html>

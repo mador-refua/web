@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+
+    <title>לומדות - מדור רפואה</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* סטיילים ייחודיים לעמוד הלומדות */
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .video-item {
+            border-radius: 14px;
+            animation: fadeInUp 0.6s ease-in-out backwards;
+            overflow: visible;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .video-header:active {
+            background: rgba(255, 190, 134, 0.1);
+        }
+
+        .video-icon {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            background: linear-gradient(135deg, #FF9933 0%, #F57C00 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 10px;
+            box-shadow: 0 4px 12px rgba(245, 124, 0, 0.3);
+            font-size: 1.35rem;
+            transition: all 0.3s ease;
+        }
+
+        .video-item:hover .video-icon {
+            transform: scale(1.05);
+        }
+
+        .video-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .video-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5D4E37;
+            margin-bottom: 2px;
+        }
+
+        .video-subtitle {
+            font-size: 0.8rem;
+            color: #8B7355;
+            font-weight: 500;
+        }
+
+        .chevron-icon {
+            font-size: 1.2rem;
+            color: #8B7355;
+            transition: transform 0.3s ease;
+        }
+
+        .video-item.expanded .chevron-icon {
+            transform: rotate(90deg);
+        }
+
+        .video-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: rgba(215, 201, 170, 0.2);
+        }
+
+        .video-item.expanded .video-content {
+            max-height: 120px;
+        }
+
+        .video-actions {
+            padding: 12px 14px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #FF9933 0%, #F57C00 100%);
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-family: 'Rubik', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:active {
+            transform: scale(0.97);
+            box-shadow: 0 2px 10px rgba(245, 124, 0, 0.4);
+        }
+
+        /* מסך טעינה */
+        .loading-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 153, 51, 0.2);
+            border-top: 4px solid #FF9933;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #5D4E37;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid #ef4444;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #991b1b;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 360px) {
+            .video-title {
+                font-size: 1rem;
+            }
+
+            .video-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-buttons">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="home-btn" onclick="goHome()">
+                    🏠
+                </button>
+            </div>
+            <h1 class="page-title">לומדות</h1>
+            <div class="header-logos">
+                <img src="Assets/logo1.PNG" alt="Logo 1">
+                <img src="Assets/logo2.PNG" alt="Logo 2">
+            </div>
+        </div>
+
+        <!-- מסך טעינה -->
+        <div id="loading-screen" class="loading-screen">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">טוען סרטונים...</div>
+        </div>
+
+        <!-- הודעת שגיאה -->
+        <div id="error-screen" style="display: none;">
+            <div class="error-message">
+                <div style="font-size: 2rem; margin-bottom: 10px;">⚠️</div>
+                <div id="error-text">שגיאה בטעינת הסרטונים</div>
+            </div>
+        </div>
+
+        <!-- רשימת סרטונים -->
+        <div id="video-list" class="video-list" style="display: none;"></div>
+    </div>
+
+    <script>
+        // כתובת ה-Apps Script שיחזיר את רשימת הסרטונים
+        const VIDEOS_URL = 'https://script.google.com/macros/s/AKfycbzT_F2coz6EOWSFER7dyRs9rq4NNLWDqTq2Xw2mQnpp3mvOS-4EKeNksK1JQrF_A3w/exec';
+
+        let videos = [];
+        let lastLoadTime = 0;
+        const RATE_LIMIT_MS = 2000; // מינימום 2 שניות בין טעינות
+
+        // בדיקת URL תקין ובטוח
+        function isValidUrl(url) {
+            if (!url || typeof url !== 'string') return false;
+
+            try {
+                const urlObj = new URL(url);
+                // רק HTTPS וממקורות מהימנים
+                return urlObj.protocol === 'https:' &&
+                       (urlObj.hostname === 'drive.google.com' ||
+                        urlObj.hostname === 'script.google.com' ||
+                        urlObj.hostname === 'script.googleusercontent.com');
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // טעינת סרטונים מ-Google Sheets
+        async function loadVideos() {
+            // Rate limiting
+            const now = Date.now();
+            if (now - lastLoadTime < RATE_LIMIT_MS) {
+                console.warn('⏱️ המתן לפני טעינה מחדש');
+                return;
+            }
+            lastLoadTime = now;
+
+            console.log('🔄 מתחיל טעינת סרטונים...');
+            console.log('📍 URL:', VIDEOS_URL);
+
+            try {
+                console.log('📡 שולח בקשה ל-Google Apps Script...');
+                // הסרת headers כדי למנוע CORS preflight request
+                const response = await fetch(VIDEOS_URL);
+
+                console.log('📊 תגובה התקבלה. Status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`שגיאת שרת: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 נתונים:', data);
+
+                if (!data.success) {
+                    console.error('❌ data.success = false');
+                    throw new Error(data.error || 'שגיאה בטעינת נתונים');
+                }
+
+                console.log(`📋 ${data.videos.length} סרטונים נמצאו`);
+
+                // סינון וולידציה של הסרטונים
+                videos = data.videos
+                    .filter(v => {
+                        const valid = v.title && v.title.trim() !== '' && v.url;
+                        if (!valid) console.warn('⚠️ סרטון לא תקין:', v);
+                        return valid;
+                    })
+                    .filter(v => {
+                        const valid = isValidUrl(v.url);
+                        if (!valid) console.warn('⚠️ URL לא תקין:', v.url);
+                        return valid;
+                    })
+                    .map(v => ({
+                        title: String(v.title).substring(0, 200),
+                        emoji: String(v.emoji || '🎥').substring(0, 10),
+                        url: v.url
+                    }));
+
+                console.log(`✅ ${videos.length} סרטונים תקינים`);
+
+                if (videos.length === 0) {
+                    throw new Error('לא נמצאו סרטונים תקינים');
+                }
+
+                displayVideos();
+
+            } catch (error) {
+                console.error('❌ שגיאה בטעינת סרטונים:', error);
+                console.error('📋 פרטי שגיאה:', error.message, error.stack);
+                showError('לא ניתן לטעון את הסרטונים כרגע. אנא נסה שוב מאוחר יותר.');
+            }
+        }
+
+        // escape HTML לאבטחה
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+
+        // הצגת סרטונים
+        function displayVideos() {
+            const container = document.getElementById('video-list');
+            container.innerHTML = '';
+
+            videos.forEach((video, index) => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.style.animationDelay = `${0.3 + index * 0.05}s`;
+
+                // יצירת המבנה
+                const videoHeader = document.createElement('div');
+                videoHeader.className = 'video-header';
+                videoHeader.onclick = function() { toggleVideo(videoItem); };
+
+                videoHeader.innerHTML = `
+                    <div class="video-icon">${video.emoji || '🎥'}</div>
+                    <div class="video-info">
+                        <div class="video-title">${escapeHtml(video.title)}</div>
+                        <div class="video-subtitle">לחץ לצפייה</div>
+                    </div>
+                    <span class="chevron-icon">◀</span>
+                `;
+
+                const videoContent = document.createElement('div');
+                videoContent.className = 'video-content';
+
+                const videoActions = document.createElement('div');
+                videoActions.className = 'video-actions';
+
+                const actionBtn = document.createElement('button');
+                actionBtn.className = 'action-btn';
+                actionBtn.innerHTML = '▶️ צפה בסרטון';
+                actionBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    openVideo(video.url);
+                };
+
+                videoActions.appendChild(actionBtn);
+                videoContent.appendChild(videoActions);
+                videoItem.appendChild(videoHeader);
+                videoItem.appendChild(videoContent);
+                container.appendChild(videoItem);
+            });
+
+            // הסתרת מסך טעינה והצגת רשימה
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('video-list').style.display = 'flex';
+
+            console.log(`✅ ${videos.length} סרטונים מוצגים בממשק`);
+        }
+
+        // הצגת שגיאה
+        function showError(message) {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('error-screen').style.display = 'block';
+            document.getElementById('error-text').textContent = message;
+        }
+
+        // פתיחה/סגירה של סרטון
+        function toggleVideo(element) {
+            // סגור את כל האחרים
+            document.querySelectorAll('.video-item').forEach(item => {
+                if (item !== element) {
+                    item.classList.remove('expanded');
+                }
+            });
+
+            // פתח/סגור את הנוכחי
+            element.classList.toggle('expanded');
+        }
+
+        // פתיחת סרטון
+        function openVideo(url) {
+            // ולידציה נוספת לפני פתיחה
+            if (!isValidUrl(url)) {
+                console.error('URL לא תקין');
+                alert('קישור לא תקין');
+                return;
+            }
+
+            // פתיחה עם אבטחה
+            const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
+            if (newWindow) {
+                newWindow.opener = null; // מניעת גישה לחלון המקורי
+            }
+        }
+
+        // חזרה
+        function goBack() {
+            // בדיקה שיש היסטוריה
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                goHome();
+            }
+        }
+
+        // חזרה לבית
+        function goHome() {
+            // מניעת open redirect
+            window.location.href = './index.html';
+        }
+
+        // מניעת זום כפול
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // טעינה בעת העלאת הדף
+        window.addEventListener('load', loadVideos);
+    </script>
+</body>
+</html>
