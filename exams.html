@@ -13,140 +13,495 @@
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:;">
 
-    <title>בחנים - מדור רפואה</title>
+    <!-- Description & Icons -->
+    <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף">
+    <link rel="icon" type="image/png" href="Assets/logo1.PNG">
+    <link rel="apple-touch-icon" href="Assets/logo1.PNG">
+    <meta name="theme-color" content="#1a1d23">
+    <meta name="apple-mobile-web-app-title" content="מדור רפואה">
 
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>בחנים | מדור רפואה</title>
 
-    <!-- FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Theme System -->
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
 
     <style>
-        /* סטיילים ייחודיים לעמוד קטגוריות */
-        body {
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-bright: #FF8C42;
+            --orange-dark: #E85A24;
+            --orange-glow: rgba(255, 107, 53, 0.4);
+            --charcoal: #1a1d23;
+            --charcoal-light: #252931;
+            --charcoal-lighter: #2f343d;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --success: #22c55e;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
         }
 
-        .categories-list {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--charcoal);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('Assets/background.JPEG') center center / cover no-repeat;
+            z-index: 0;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%),
+                linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(26, 29, 35, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            background: var(--charcoal-lighter);
+            border-color: var(--orange-primary);
+            color: var(--orange-primary);
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logos img {
+            height: 36px;
+            width: auto;
+        }
+
+        /* Content */
+        .content {
+            padding: 24px 20px 40px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .section-title-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-light), transparent);
+        }
+
+        .section-title-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+        }
+
+        /* Cards */
+        .cards-list {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 14px;
         }
 
         .category-card {
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
             display: flex;
             align-items: center;
-            animation: fadeInUp 0.6s ease-in-out backwards;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            gap: 16px;
         }
 
-        .category-card:nth-child(1) { animation-delay: 0.3s; }
-        .category-card:nth-child(2) { animation-delay: 0.4s; }
-        .category-card:nth-child(3) { animation-delay: 0.5s; }
-
-        .category-icon {
-            font-size: 1.9rem;
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-primary), var(--orange-bright));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
         }
 
-        .category-info {
-            flex: 1;
-            min-width: 0;
-            text-align: right;
+        .category-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 53, 0.3);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 107, 53, 0.1);
         }
 
-        .category-title {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: #5D4E37;
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
+        .category-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
         }
 
-        .category-subtitle {
-            font-size: 0.95rem;
-            color: #8B7355;
-            font-weight: 500;
+        .category-card:active {
+            transform: translateY(-2px) scale(0.98);
         }
 
-        .coming-soon-badge {
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-            color: #ffffff;
-            padding: 8px 14px;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-left: 8px;
-            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
-            letter-spacing: 0.5px;
-        }
-
-        /* כרטיס לא פעיל */
         .category-card.inactive {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
         }
 
         .category-card.inactive:hover {
             transform: none;
-            box-shadow:
-                0 4px 20px rgba(139, 69, 19, 0.08),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border-color: var(--border-subtle);
+            box-shadow: none;
+        }
+
+        .category-card.inactive::before {
+            display: none;
+        }
+
+        /* Staggered animations */
+        .category-card:nth-child(1) { animation: fadeSlideUp 0.5s ease-out 0.1s backwards; }
+        .category-card:nth-child(2) { animation: fadeSlideUp 0.5s ease-out 0.2s backwards; }
+        .category-card:nth-child(3) { animation: fadeSlideUp 0.5s ease-out 0.3s backwards; }
+
+        .card-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--charcoal-lighter);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .category-card:hover .card-icon {
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            transform: scale(1.05);
+        }
+
+        .card-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .category-card:hover .card-title {
+            color: var(--orange-primary);
+        }
+
+        .card-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .card-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .card-badge.active {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .card-badge.coming-soon {
+            background: rgba(107, 114, 128, 0.15);
+            color: var(--text-muted);
+            border: 1px solid rgba(107, 114, 128, 0.3);
+        }
+
+        .card-arrow {
+            width: 32px;
+            height: 32px;
+            background: var(--charcoal-lighter);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+
+        .category-card:hover .card-arrow {
+            background: var(--orange-primary);
+            color: white;
+            border-color: var(--orange-primary);
+            transform: translateX(-4px);
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 29, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 60px;
+        }
+
+        .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
+        .bottom-nav-item.active { color: var(--orange-primary); }
+        .bottom-nav-item.active i { transform: scale(1.1); }
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 0 0 3px 3px;
+        }
+        .bottom-nav-item:not(.active):hover { color: var(--text-secondary); }
+        .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
+
+        .main-container { padding-bottom: 80px; }
+
+        @media (max-width: 400px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .header-logos img {
+                height: 32px;
+            }
+
+            .content {
+                padding: 20px 16px 32px;
+            }
+
+            .category-card {
+                padding: 16px;
+            }
+
+            .card-icon {
+                width: 46px;
+                height: 46px;
+                font-size: 1.4rem;
+            }
+
+            .card-title {
+                font-size: 1.05rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-buttons">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-vignette"></div>
+
+    <div class="main-container">
+        <header class="header">
+            <div class="header-right">
                 <button class="back-btn" onclick="goBack()">
                     <i class="fas fa-arrow-right"></i>
                 </button>
-                <button class="home-btn" onclick="goHome()">🏠</button>
+                <h1 class="page-title">בחנים</h1>
             </div>
-            <h1 class="page-title">בחנים</h1>
-            <div class="header-logos">
-                <img src="Assets/logo1.PNG" alt="Logo 1">
-                <img src="Assets/logo2.PNG" alt="Logo 2">
-            </div>
-        </div>
-
-        <div class="categories-list">
-            <!-- מטפל מחלץ -->
-            <div class="category-card card" onclick="openCategory('metapel')">
-                <div class="category-icon card-icon">🚑</div>
-                <div class="category-info">
-                    <div class="category-title">מטפל מחלץ</div>
-                    <div class="category-subtitle">בחנים לחובש ומטפל בכיר</div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <div class="header-logos">
+                    <img src="Assets/logo1.PNG" alt="Logo 1">
+                    <img src="Assets/logo2.PNG" alt="Logo 2">
                 </div>
-                <span class="exam-badge">פעיל</span>
             </div>
+        </header>
 
-            <!-- מאגר כללי -->
-            <div class="category-card card" onclick="window.location.href='practice-questions.html'">
-                <div class="category-icon card-icon">📚</div>
-                <div class="category-info">
-                    <div class="category-title">מאגר כללי</div>
-                    <div class="category-subtitle">שאלות מכל התחומים</div>
-                </div>
-                <span class="exam-badge">פעיל</span>
+        <div class="content">
+            <div class="section-title">
+                <span class="section-title-line"></span>
+                <span class="section-title-text">בחר קטגוריה</span>
+                <span class="section-title-line" style="background: linear-gradient(270deg, var(--border-light), transparent);"></span>
             </div>
 
-            <!-- אימון יחידתי -->
-            <div class="category-card card inactive">
-                <div class="category-icon card-icon">🎯</div>
-                <div class="category-info">
-                    <div class="category-title">אימון יחידתי</div>
-                    <div class="category-subtitle">תרגול לפי יחידה</div>
+            <div class="cards-list">
+                <div class="category-card" onclick="openCategory('metapel')">
+                    <div class="card-icon">🚑</div>
+                    <div class="card-content">
+                        <div class="card-title">מטפל מחלץ</div>
+                        <div class="card-subtitle">בחנים לחובש ומטפל בכיר</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
+                    <div class="card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
                 </div>
-                <span class="coming-soon-badge">בקרוב</span>
+
+                <div class="category-card" onclick="window.location.href='practice-questions.html'">
+                    <div class="card-icon">📚</div>
+                    <div class="card-content">
+                        <div class="card-title">מאגר כללי</div>
+                        <div class="card-subtitle">שאלות מכל התחומים</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
+                    <div class="card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                </div>
+
+                <div class="category-card inactive">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-content">
+                        <div class="card-title">אימון יחידתי</div>
+                        <div class="card-subtitle">תרגול לפי יחידה</div>
+                    </div>
+                    <span class="card-badge coming-soon">בקרוב</span>
+                </div>
             </div>
         </div>
     </div>
@@ -156,7 +511,6 @@
             if (category === 'metapel') {
                 window.location.href = 'exams-metapel.html';
             }
-            // שאר הקטגוריות יבנו בעתיד
         }
 
         function goBack() {
@@ -167,7 +521,6 @@
             window.location.href = 'index.html';
         }
 
-        // מניעת זום כפול
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(e) {
             const now = Date.now();
@@ -177,5 +530,29 @@
             lastTouchEnd = now;
         }, false);
     </script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>בית</span>
+        </a>
+        <a href="lomdot2-page.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>לומדות</span>
+        </a>
+        <a href="exams.html" class="bottom-nav-item active">
+            <i class="fas fa-file-alt"></i>
+            <span>בחנים</span>
+        </a>
+        <a href="safrot-page.html" class="bottom-nav-item">
+            <i class="fas fa-book"></i>
+            <span>ספרות</span>
+        </a>
+        <a href="lessons-learned.html" class="bottom-nav-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>לקחים</span>
+        </a>
+    </nav>
 </body>
 </html>
