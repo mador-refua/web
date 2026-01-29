@@ -1,0 +1,170 @@
+/* Theme Variables - Light Mode */
+[data-theme="light"] {
+    --charcoal: #f5f5f5;
+    --charcoal-light: #ffffff;
+    --charcoal-lighter: #e8e8e8;
+    --slate: #d0d0d0;
+    --slate-light: #c0c0c0;
+    --text-primary: #1a1d23;
+    --text-secondary: #4a5262;
+    --text-muted: #6b7280;
+    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-light: rgba(0, 0, 0, 0.1);
+    --bg-overlay-start: rgba(245, 245, 245, 0.85);
+    --bg-overlay-mid: rgba(245, 245, 245, 0.75);
+    --bg-overlay-end: rgba(245, 245, 245, 0.95);
+}
+
+/* Light mode background adjustments */
+[data-theme="light"] .bg-overlay {
+    background:
+        linear-gradient(180deg,
+            rgba(245, 245, 245, 0.85) 0%,
+            rgba(245, 245, 245, 0.75) 30%,
+            rgba(245, 245, 245, 0.85) 70%,
+            rgba(245, 245, 245, 0.98) 100%),
+        linear-gradient(135deg,
+            rgba(255, 107, 53, 0.05) 0%,
+            transparent 50%);
+}
+
+[data-theme="light"] .bg-vignette {
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(245, 245, 245, 0.4) 100%);
+}
+
+/* Header adjustments for light mode */
+[data-theme="light"] .header,
+[data-theme="light"] header {
+    background: rgba(255, 255, 255, 0.9);
+    border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Bottom nav light mode */
+[data-theme="light"] .bottom-nav {
+    background: rgba(255, 255, 255, 0.95);
+    border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Cards and containers */
+[data-theme="light"] .card,
+[data-theme="light"] .video-card,
+[data-theme="light"] .video-item,
+[data-theme="light"] .question-card,
+[data-theme="light"] .mode-card,
+[data-theme="light"] .recent-card,
+[data-theme="light"] .result-card,
+[data-theme="light"] .stats-bar,
+[data-theme="light"] .progress-section,
+[data-theme="light"] .document-item,
+[data-theme="light"] .exam-control-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Input fields */
+[data-theme="light"] .search-box,
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="password"],
+[data-theme="light"] select {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.15);
+    color: #1a1d23;
+}
+
+[data-theme="light"] .search-box:focus-within,
+[data-theme="light"] input:focus {
+    border-color: var(--orange-primary);
+}
+
+/* Buttons */
+[data-theme="light"] .back-btn,
+[data-theme="light"] .toggle-btn:not(.active),
+[data-theme="light"] .category-tab:not(.active),
+[data-theme="light"] .skip-btn,
+[data-theme="light"] .home-btn {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #4a5262;
+}
+
+[data-theme="light"] .answer-option,
+[data-theme="light"] .answer-btn {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* Feedback bubbles */
+[data-theme="light"] .feedback-bubble.correct,
+[data-theme="light"] .feedback.correct {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.08));
+}
+
+[data-theme="light"] .feedback-bubble.wrong,
+[data-theme="light"] .feedback.wrong {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
+}
+
+[data-theme="light"] .feedback-tip {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Progress bars */
+[data-theme="light"] .progress-container,
+[data-theme="light"] .progress-mini-bar {
+    background: #e0e0e0;
+}
+
+/* Scrollbar for light mode */
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+    background: #c0c0c0;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+    background: var(--charcoal-light);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.theme-toggle:hover {
+    border-color: var(--orange-primary);
+    color: var(--orange-primary);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+[data-theme="light"] .theme-toggle {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.12);
+    color: #4a5262;
+}
+
+/* Smooth transitions for theme change */
+body,
+.header,
+header,
+.bottom-nav,
+.card,
+.video-card,
+.question-card,
+input,
+button,
+.bg-overlay {
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}

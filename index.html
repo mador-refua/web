@@ -13,333 +13,805 @@
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
 
-    <title>מדור רפואה - מערכת למידה וניהול ידע</title>
+    <!-- Description & SEO -->
+    <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף. לומדות, בחנים, ספרות מקצועית ולקחים נלמדים.">
+    <meta name="keywords" content="רפואה, פיקוד העורף, חובש, מט״ב, הכשרה רפואית">
+    <meta name="author" content="מדור רפואה - פיקוד העורף">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" crossorigin="anonymous">
+    <!-- Favicon & App Icons -->
+    <link rel="icon" type="image/png" href="Assets/logo1.PNG">
+    <link rel="apple-touch-icon" href="Assets/logo1.PNG">
+    <link rel="shortcut icon" href="Assets/logo1.PNG">
+
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#1a1d23">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="מדור רפואה">
+
+    <title>מדור רפואה | פיקוד העורף</title>
+
+    <!-- Google Fonts - Heebo for that official Hebrew military aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <!-- Theme System -->
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
 
     <style>
-        /* סטיילים ייחודיים לעמוד הבית */
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-bright: #FF8C42;
+            --orange-dark: #E85A24;
+            --orange-glow: rgba(255, 107, 53, 0.4);
+            --charcoal: #1a1d23;
+            --charcoal-light: #252931;
+            --charcoal-lighter: #2f343d;
+            --slate: #3d4451;
+            --slate-light: #4a5262;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --success: #22c55e;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            font-size: 16px;
+        }
+
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            font-family: 'Heebo', sans-serif;
+            background: var(--charcoal);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            position: relative;
+            color: var(--text-primary);
         }
 
-        .hero {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 40px 20px 30px;
-            animation: fadeInDown 1s ease-in-out 0.3s backwards;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        /* Background image layer */
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('Assets/background.JPEG') center center / cover no-repeat;
+            z-index: 0;
         }
 
-        .hero-logos {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            animation: float 3s ease-in-out infinite;
+        /* Dark gradient overlay for readability */
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(180deg,
+                    rgba(26, 29, 35, 0.75) 0%,
+                    rgba(26, 29, 35, 0.65) 30%,
+                    rgba(26, 29, 35, 0.8) 70%,
+                    rgba(26, 29, 35, 0.95) 100%),
+                linear-gradient(135deg,
+                    rgba(255, 107, 53, 0.08) 0%,
+                    transparent 50%);
+            z-index: 1;
         }
 
-        .hero-logos img {
-            height: 70px;
-            width: auto;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        /* Subtle vignette effect */
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%);
+            z-index: 2;
+            pointer-events: none;
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #1a1a1a;
-            margin-bottom: 14px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            line-height: 1.2;
+        /* Noise texture for premium feel */
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            z-index: 3;
+            pointer-events: none;
         }
 
-        .hero p {
-            font-size: 1.15rem;
-            font-weight: 600;
-            color: #2d3748;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            letter-spacing: 0.3px;
+        /* Orange glow accent at top */
+        .bg-glow {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            z-index: 3;
+            pointer-events: none;
         }
 
-        .hero-subtitle {
-            font-size: 0.95rem !important;
-            font-weight: 500 !important;
-            color: #4a5568 !important;
-            margin-top: 8px;
-            opacity: 0.85;
-        }
-
-        .cards-container {
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            padding-bottom: 40px;
         }
 
-        .card {
+        /* ===== HEADER ===== */
+        .header {
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            animation: fadeInUp 0.8s ease-in-out backwards;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(26, 29, 35, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .card:nth-child(1) {
-            animation-delay: 0.5s;
-        }
-
-        .card:nth-child(2) {
-            animation-delay: 0.7s;
-        }
-
-        .card:nth-child(3) {
-            animation-delay: 0.9s;
-        }
-
-        .card-info {
-            flex: 1;
-            text-align: right;
-            min-width: 0;
-        }
-
-        /* אייקון סטטיסטיקות למטה */
-        .stats-icon-bottom {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
+        .header-logos {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-            margin: 30px auto 20px;
-            opacity: 0.4;
+            gap: 16px;
         }
 
-        .stats-icon-bottom:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
-            opacity: 1;
+        .header-logos img {
+            height: 48px;
+            width: auto;
         }
 
-        .stats-icon-bottom:active {
-            transform: scale(0.95);
-        }
-
-        /* טאב צף למאגר תרגול */
-        .practice-tab {
-            position: fixed;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%) translateX(-85px);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 20px 15px 25px;
-            border-radius: 0 50px 50px 0;
-            cursor: pointer;
-            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
+        .header-actions {
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--charcoal-light);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
+        }
+
+        .status-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            padding: 48px 24px 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            border-radius: 6px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px var(--orange-glow);
+            animation: fadeSlideDown 0.6s ease-out;
+        }
+
+        .hero-badge-icon {
+            font-size: 1rem;
+        }
+
+        .hero-badge-text {
+            font-size: 0.75rem;
             font-weight: 700;
-            font-size: 1.1em;
-            animation: slideInFromLeft 1s ease 1.5s forwards;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: white;
         }
 
-        .practice-tab:hover {
-            transform: translateY(-50%) translateX(0);
-            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6);
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            animation: fadeSlideDown 0.6s ease-out 0.1s backwards;
         }
 
-        .practice-tab:active {
-            transform: translateY(-50%) translateX(0) scale(0.95);
+        .hero-subtitle {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--orange-primary);
+            margin-bottom: 12px;
+            animation: fadeSlideDown 0.6s ease-out 0.2s backwards;
         }
 
-        .practice-tab-icon {
-            font-size: 1.8em;
-            animation: pulse 2s ease-in-out infinite;
+        .hero-description {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 320px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+            animation: fadeSlideDown 0.6s ease-out 0.3s backwards;
         }
 
-        .practice-tab-text {
-            white-space: nowrap;
-            letter-spacing: 0.5px;
+        /* Quick Practice Button */
+        .quick-practice-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 28px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow:
+                0 4px 20px var(--orange-glow),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: fadeSlideUp 0.6s ease-out 0.4s backwards;
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes slideInFromLeft {
+        .quick-practice-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--orange-bright), var(--orange-primary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quick-practice-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow:
+                0 8px 30px rgba(255, 107, 53, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .quick-practice-btn:hover::before {
+            opacity: 1;
+        }
+
+        .quick-practice-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .quick-practice-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .quick-practice-icon {
+            font-size: 1.3rem;
+        }
+
+        .quick-practice-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .quick-practice-btn:hover .quick-practice-arrow {
+            transform: translateX(-4px);
+        }
+
+        /* ===== NAVIGATION CARDS ===== */
+        .nav-section {
+            padding: 0 20px 40px;
+            flex: 1;
+        }
+
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 0 4px;
+        }
+
+        .section-label-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border-light), transparent);
+        }
+
+        .section-label-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--text-muted);
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .nav-card {
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 24px 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 140px;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-primary), var(--orange-bright));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 0%, rgba(255, 107, 53, 0.08), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 107, 53, 0.3);
+            box-shadow:
+                0 8px 30px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 107, 53, 0.1);
+        }
+
+        .nav-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-card:hover::after {
+            opacity: 1;
+        }
+
+        .nav-card:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* Staggered animations */
+        .nav-card:nth-child(1) { animation: fadeSlideUp 0.5s ease-out 0.2s backwards; }
+        .nav-card:nth-child(2) { animation: fadeSlideUp 0.5s ease-out 0.3s backwards; }
+        .nav-card:nth-child(3) { animation: fadeSlideUp 0.5s ease-out 0.4s backwards; }
+        .nav-card:nth-child(4) { animation: fadeSlideUp 0.5s ease-out 0.5s backwards; }
+
+        .nav-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--charcoal-lighter);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nav-card:hover .nav-card-icon {
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--orange-glow);
+            transform: scale(1.05);
+        }
+
+        .nav-card-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-card:hover .nav-card-title {
+            color: var(--orange-primary);
+        }
+
+        .nav-card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: auto;
+        }
+
+        .nav-card-arrow {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 28px;
+            height: 28px;
+            background: var(--charcoal-lighter);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .nav-card:hover .nav-card-arrow {
+            background: var(--orange-primary);
+            color: white;
+            border-color: var(--orange-primary);
+            transform: translateX(-4px);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            padding: 20px 24px 30px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .footer-stats-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .footer-stats-btn:hover {
+            background: var(--charcoal-lighter);
+            border-color: var(--orange-primary);
+            color: var(--orange-primary);
+        }
+
+        .footer-stats-btn i {
+            font-size: 1rem;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeSlideDown {
             from {
-                transform: translateY(-50%) translateX(-150px);
                 opacity: 0;
+                transform: translateY(-20px);
             }
             to {
-                transform: translateY(-50%) translateX(-85px);
                 opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            50% {
-                transform: scale(1.15);
-            }
-        }
-
-        /* מובייל - טאב תרגול */
-        @media (max-width: 768px) {
-            .practice-tab {
-                padding: 12px 15px 12px 20px;
-                font-size: 0.95em;
-                transform: translateY(-50%) translateX(-75px);
-            }
-
-            .practice-tab:hover {
-                transform: translateY(-50%) translateX(0);
-            }
-
-            .practice-tab-icon {
-                font-size: 1.5em;
-            }
-
-            @keyframes slideInFromLeft {
-                from {
-                    transform: translateY(-50%) translateX(-150px);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateY(-50%) translateX(-75px);
-                    opacity: 1;
-                }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        @media (max-width: 360px) {
-            .hero h1 {
-                font-size: 2.1rem;
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 400px) {
+            .header {
+                padding: 16px 20px;
             }
 
-            .hero p {
-                font-size: 1rem;
+            .header-logos img {
+                height: 40px;
+            }
+
+            .hero-section {
+                padding: 36px 20px 32px;
+            }
+
+            .hero-title {
+                font-size: 2.4rem;
             }
 
             .hero-subtitle {
-                font-size: 0.85rem !important;
+                font-size: 1.1rem;
             }
 
-            .practice-tab {
-                font-size: 0.85em;
-                padding: 10px 12px 10px 18px;
+            .quick-practice-btn {
+                padding: 14px 24px;
+                font-size: 1rem;
             }
 
-            .practice-tab-icon {
-                font-size: 1.3em;
+            .nav-section {
+                padding: 0 16px 32px;
+            }
+
+            .nav-grid {
+                gap: 12px;
+            }
+
+            .nav-card {
+                padding: 20px 16px;
+                min-height: 130px;
+            }
+
+            .nav-card-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.3rem;
+            }
+
+            .nav-card-title {
+                font-size: 1rem;
+            }
+
+            .nav-card-arrow {
+                width: 24px;
+                height: 24px;
+                bottom: 16px;
+                left: 16px;
             }
         }
+
+        @media (max-width: 340px) {
+            .hero-title {
+                font-size: 2.1rem;
+            }
+
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-card {
+                min-height: auto;
+                flex-direction: row;
+                align-items: center;
+                gap: 16px;
+                padding: 18px;
+            }
+
+            .nav-card-icon {
+                margin-bottom: 0;
+            }
+
+            .nav-card-content {
+                flex: 1;
+            }
+
+            .nav-card-arrow {
+                position: static;
+            }
+        }
+
+        /* Tablet and larger - keep mobile-first approach for this app */
+        @media (min-width: 600px) {
+            .main-container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+        }
+
+        /* Touch feedback */
+        @media (hover: none) {
+            .nav-card:active {
+                background: var(--charcoal-lighter);
+            }
+
+            .nav-card:active::before {
+                transform: scaleX(1);
+            }
+
+            .nav-card:active .nav-card-icon {
+                background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            }
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 107, 53, 0.3);
+            transform: scale(0);
+            animation: rippleEffect 0.6s ease-out;
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <div class="hero-logos">
-                <img src="Assets/logo1.PNG" alt="Logo 1">
-                <img src="Assets/logo2.PNG" alt="Logo 2">
-            </div>
-            <h1>מדור רפואה</h1>
-            <p class="hero-subtitle">בא״פ העורף</p>
-        </div>
+    <!-- Background layers -->
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-vignette"></div>
+    <div class="bg-noise"></div>
+    <div class="bg-glow"></div>
 
-        <div class="cards-container">
-            <div class="card" data-page="tutorials">
-                <div class="card-icon">🎓</div>
-                <div class="card-info">
-                    <div class="card-title">לומדות</div>
-                    <div class="card-subtitle">לחץ לצפייה</div>
+    <div class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-logos">
+                <img src="Assets/logo1.PNG" alt="פיקוד העורף">
+                <img src="Assets/logo2.PNG" alt="מדור רפואה">
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <div class="header-status">
+                    <div class="status-dot"></div>
+                    <span class="status-text">מערכת פעילה</span>
                 </div>
-                <span class="chevron-icon">◀</span>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">
+                <span class="hero-badge-icon">🏥</span>
+                <span class="hero-badge-text">בא״פ העורף</span>
+            </div>
+            <h1 class="hero-title">מדור רפואה</h1>
+            <p class="hero-subtitle">מערכת הכשרה וניהול ידע</p>
+            <p class="hero-description">
+                פלטפורמת הלמידה והבחינות הרשמית של מדור הרפואה בפיקוד העורף
+            </p>
+
+            <button class="quick-practice-btn" onclick="window.location.href='practice-questions.html'">
+                <span class="quick-practice-icon">🎯</span>
+                <span>תרגול מהיר</span>
+                <span class="quick-practice-arrow">←</span>
+            </button>
+        </section>
+
+        <!-- Navigation Cards -->
+        <section class="nav-section">
+            <div class="section-label">
+                <span class="section-label-line"></span>
+                <span class="section-label-text">מודולים</span>
+                <span class="section-label-line" style="background: linear-gradient(270deg, var(--border-light), transparent);"></span>
             </div>
 
-            <div class="card" data-page="quizzes">
-                <div class="card-icon">📝</div>
-                <div class="card-info">
-                    <div class="card-title">בחנים</div>
-                    <div class="card-subtitle">לחץ לצפייה</div>
+            <div class="nav-grid">
+                <div class="nav-card" data-page="tutorials">
+                    <div class="nav-card-icon">🎓</div>
+                    <div class="nav-card-content">
+                        <div class="nav-card-title">לומדות</div>
+                        <div class="nav-card-subtitle">סרטוני הדרכה</div>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
                 </div>
-                <span class="chevron-icon">◀</span>
-            </div>
 
-            <div class="card" data-page="literature">
-                <div class="card-icon">📖</div>
-                <div class="card-info">
-                    <div class="card-title">ספרות מקצועית</div>
-                    <div class="card-subtitle">לחץ לצפייה</div>
+                <div class="nav-card" data-page="quizzes">
+                    <div class="nav-card-icon">📝</div>
+                    <div class="nav-card-content">
+                        <div class="nav-card-title">בחנים</div>
+                        <div class="nav-card-subtitle">מבחנים ממוחשבים</div>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
                 </div>
-                <span class="chevron-icon">◀</span>
-            </div>
 
-            <div class="card" data-page="lessons">
-                <div class="card-icon">🚨</div>
-                <div class="card-info">
-                    <div class="card-title">לקחים מאירועים</div>
-                    <div class="card-subtitle">לחץ לצפייה</div>
+                <div class="nav-card" data-page="literature">
+                    <div class="nav-card-icon">📖</div>
+                    <div class="nav-card-content">
+                        <div class="nav-card-title">ספרות</div>
+                        <div class="nav-card-subtitle">חומרי קריאה</div>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
                 </div>
-                <span class="chevron-icon">◀</span>
+
+                <div class="nav-card" data-page="lessons">
+                    <div class="nav-card-icon">🚨</div>
+                    <div class="nav-card-content">
+                        <div class="nav-card-title">לקחים</div>
+                        <div class="nav-card-subtitle">מאירועים</div>
+                    </div>
+                    <div class="nav-card-arrow">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- אייקון סטטיסטיקות למטה -->
-        <div class="stats-icon-bottom" onclick="window.location.href='instructor-dashboard.html'" title="סטטיסטיקות">
-            📊
-        </div>
-
-        <!-- טאב צף למאגר תרגול -->
-        <div class="practice-tab" onclick="window.location.href='practice-questions.html'" title="מאגר תרגול">
-            <div class="practice-tab-icon">🎯</div>
-            <div class="practice-tab-text">תרגול</div>
-        </div>
+        <!-- Footer -->
+        <footer class="footer">
+            <span class="footer-text">© 2026 מדור רפואה</span>
+            <button class="footer-stats-btn" onclick="window.location.href='instructor-dashboard.html'" title="לוח בקרה למדריכים">
+                <i class="fas fa-chart-bar"></i>
+                <span>סטטיסטיקות</span>
+            </button>
+        </footer>
     </div>
 
     <script>
-        // מניעת התנהגות ברירת מחדל במובייל
-        document.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.card')) {
-                return;
-            }
-        }, { passive: true });
-
-        // טיפול בלחיצות על כרטיסים
-        document.querySelectorAll('.card').forEach(card => {
+        // Handle navigation card clicks with ripple effect
+        document.querySelectorAll('.nav-card').forEach(card => {
             card.addEventListener('click', function(e) {
                 const page = this.getAttribute('data-page');
 
-                // יצירת אפקט ripple
+                // Create ripple effect
                 const ripple = document.createElement('div');
                 ripple.className = 'ripple';
                 const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
+                const size = Math.max(rect.width, rect.height) * 2;
                 const x = e.clientX - rect.left - size / 2;
                 const y = e.clientY - rect.top - size / 2;
 
@@ -348,37 +820,33 @@
                 ripple.style.top = y + 'px';
 
                 this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
 
-                // הסרת ripple אחרי האנימציה
-                setTimeout(() => ripple.remove(), 700);
-
-                // ניווט לדף המתאים
+                // Navigate after brief delay
                 setTimeout(() => {
-                    if (page === 'tutorials') {
-                        window.location.href = 'lomdot2-page.html';
-                    } else if (page === 'quizzes') {
-                        window.location.href = 'exams.html';
-                    } else if (page === 'literature') {
-                        window.location.href = 'safrot-page.html';
-                    } else if (page === 'lessons') {
-                        window.location.href = 'lessons-learned.html';
-                    } else if (page === 'statistics') {
-                        window.location.href = 'instructor-dashboard.html';
+                    const pages = {
+                        'tutorials': 'lomdot2-page.html',
+                        'quizzes': 'exams.html',
+                        'literature': 'safrot-page.html',
+                        'lessons': 'lessons-learned.html'
+                    };
+                    if (pages[page]) {
+                        window.location.href = pages[page];
                     }
-                }, 300);
+                }, 200);
             });
 
-            // תמיכה במגע
+            // Touch feedback
             card.addEventListener('touchstart', function() {
                 this.style.transition = 'all 0.1s ease';
-            });
+            }, { passive: true });
 
             card.addEventListener('touchend', function() {
-                this.style.transition = 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-            });
+                this.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }, { passive: true });
         });
 
-        // מניעת זום כפול בלחיצה
+        // Prevent double-tap zoom on mobile
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(e) {
             const now = Date.now();
@@ -388,5 +856,6 @@
             lastTouchEnd = now;
         }, false);
     </script>
+
 </body>
 </html>

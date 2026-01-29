@@ -6,278 +6,408 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <!-- Security Headers -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
 
-    <title>בחנים מטפל מחלץ - מדור רפואה</title>
+    <title>מטפל מחלץ | מדור רפואה</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- FontAwesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="styles.css">
-
     <style>
-        /* סטיילים ייחודיים לעמוד המבחנים */
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-bright: #FF8C42;
+            --orange-dark: #E85A24;
+            --orange-glow: rgba(255, 107, 53, 0.4);
+            --charcoal: #1a1d23;
+            --charcoal-light: #252931;
+            --charcoal-lighter: #2f343d;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --success: #22c55e;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('Assets/background.JPEG');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
+            font-family: 'Heebo', sans-serif;
+            background: var(--charcoal);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-primary);
         }
 
-        .exams-list {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
+        .bg-image { position: fixed; inset: 0; background: url('Assets/background.JPEG') center center / cover no-repeat; z-index: 0; }
+        .bg-overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%), linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%); z-index: 1; }
+        .bg-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%); z-index: 2; pointer-events: none; }
 
-        .exam-card {
+        .main-container { position: relative; z-index: 10; min-height: 100vh; max-width: 500px; margin: 0 auto; }
+
+        .header {
+            padding: 20px 24px;
             display: flex;
             align-items: center;
-            animation: fadeInUp 0.6s ease-in-out backwards;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(26, 29, 35, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .back-btn {
+            width: 40px; height: 40px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .back-btn:hover { background: var(--charcoal-lighter); border-color: var(--orange-primary); color: var(--orange-primary); }
+
+        .page-title { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
+
+        .header-logos { display: flex; align-items: center; gap: 12px; }
+        .header-logos img { height: 36px; width: auto; }
+
+        .content { padding: 24px 20px 40px; }
+
+        .section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .section-title-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-light), transparent); }
+        .section-title-text { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); }
+
+        .cards-list { display: flex; flex-direction: column; gap: 14px; }
+
+        .exam-card {
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 16px;
         }
 
-        .exam-card:nth-child(1) { animation-delay: 0.3s; }
-        .exam-card:nth-child(2) { animation-delay: 0.4s; }
-        .exam-card:nth-child(3) { animation-delay: 0.5s; }
-        .exam-card:nth-child(4) { animation-delay: 0.6s; }
-
-        /* מבחן חסום */
-        .exam-card.locked {
-            opacity: 0.5;
-            cursor: not-allowed !important;
-            filter: grayscale(60%);
-        }
-
-        .exam-card.locked:hover {
-            transform: none !important;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        /* אייקון מנעול */
-        .lock-icon {
+        .exam-card::before {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 2.2em;
-            z-index: 10;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-primary), var(--orange-bright));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
         }
 
-        .exam-icon {
-            font-size: 1.9rem;
+        .exam-card:hover { transform: translateY(-4px); border-color: rgba(255, 107, 53, 0.3); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 107, 53, 0.1); }
+        .exam-card:hover::before { transform: scaleX(1); transform-origin: left; }
+        .exam-card:active { transform: translateY(-2px) scale(0.98); }
+
+        .exam-card.locked { opacity: 0.4; cursor: not-allowed; }
+        .exam-card.locked:hover { transform: none; border-color: var(--border-subtle); box-shadow: none; }
+        .exam-card.locked::before { display: none; }
+
+        .exam-card:nth-child(1) { animation: fadeSlideUp 0.5s ease-out 0.1s backwards; }
+        .exam-card:nth-child(2) { animation: fadeSlideUp 0.5s ease-out 0.2s backwards; }
+        .exam-card:nth-child(3) { animation: fadeSlideUp 0.5s ease-out 0.3s backwards; }
+        .exam-card:nth-child(4) { animation: fadeSlideUp 0.5s ease-out 0.4s backwards; }
+
+        .card-icon {
+            width: 52px; height: 52px;
+            background: var(--charcoal-lighter);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-subtle);
         }
 
-        .exam-info {
-            flex: 1;
-            min-width: 0;
-            text-align: right;
-        }
+        .exam-card:hover .card-icon { background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark)); border-color: transparent; box-shadow: 0 4px 15px var(--orange-glow); transform: scale(1.05); }
 
-        /* מצב טעינה */
+        .card-content { flex: 1; min-width: 0; }
+        .card-title { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; transition: color 0.3s ease; }
+        .exam-card:hover .card-title { color: var(--orange-primary); }
+        .card-subtitle { font-size: 0.85rem; color: var(--text-muted); }
+
+        .card-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+        .card-badge.active { background: rgba(34, 197, 94, 0.15); color: var(--success); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .card-badge.locked { background: rgba(107, 114, 128, 0.15); color: var(--text-muted); border: 1px solid rgba(107, 114, 128, 0.3); }
+
+        .lock-icon { position: absolute; top: 12px; right: 12px; font-size: 1.2rem; color: var(--text-muted); }
+
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            inset: 0;
+            background: rgba(26, 29, 35, 0.95);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 9999;
         }
 
-        .loading-spinner {
-            text-align: center;
-            color: white;
-        }
+        .loading-content { text-align: center; color: var(--text-primary); }
 
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid white;
+            width: 50px; height: 50px;
+            border: 4px solid var(--charcoal-lighter);
+            border-top: 4px solid var(--orange-primary);
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 29, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 60px;
+        }
+
+        .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
+        .bottom-nav-item.active { color: var(--orange-primary); }
+        .bottom-nav-item.active i { transform: scale(1.1); }
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 0 0 3px 3px;
+        }
+        .bottom-nav-item:not(.active):hover { color: var(--text-secondary); }
+        .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
+
+        .main-container { padding-bottom: 80px; }
+
+        @media (max-width: 400px) {
+            .header { padding: 16px 20px; }
+            .page-title { font-size: 1.2rem; }
+            .header-logos img { height: 32px; }
+            .content { padding: 20px 16px 32px; }
+            .exam-card { padding: 16px; }
+            .card-icon { width: 46px; height: 46px; font-size: 1.4rem; }
+            .card-title { font-size: 1.05rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-buttons">
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-vignette"></div>
+
+    <div class="main-container">
+        <header class="header">
+            <div class="header-right">
                 <button class="back-btn" onclick="goBack()">
                     <i class="fas fa-arrow-right"></i>
                 </button>
-                <button class="home-btn" onclick="goHome()">🏠</button>
+                <h1 class="page-title">מטפל מחלץ</h1>
             </div>
-            <h1 class="page-title">מטפל מחלץ</h1>
             <div class="header-logos">
                 <img src="Assets/logo1.PNG" alt="Logo 1">
                 <img src="Assets/logo2.PNG" alt="Logo 2">
             </div>
-        </div>
+        </header>
 
-        <div class="exams-list">
-            <!-- מבחן פתיחה חובש -->
-            <div class="exam-card" data-exam="מבחן פתיחה חובש" data-file="exam-hovesh-1.html">
-                <div class="exam-icon">🩹</div>
-                <div class="exam-info">
-                    <div class="exam-title">מבחן פתיחה חובש</div>
-                    <div class="exam-subtitle">25 שאלות · טראומה וחילוץ</div>
-                </div>
-                <span class="exam-badge">פעיל</span>
+        <div class="content">
+            <div class="section-title">
+                <span class="section-title-line"></span>
+                <span class="section-title-text">בחר מבחן</span>
+                <span class="section-title-line" style="background: linear-gradient(270deg, var(--border-light), transparent);"></span>
             </div>
 
-            <!-- מבחן סיום חובש -->
-            <div class="exam-card" data-exam="מבחן סיום חובש" data-file="exam-hovesh-2.html">
-                <div class="exam-icon">✅</div>
-                <div class="exam-info">
-                    <div class="exam-title">מבחן סיום חובש</div>
-                    <div class="exam-subtitle">מבחן גמר מלא</div>
+            <div class="cards-list">
+                <div class="exam-card" data-exam="מבחן פתיחה חובש" data-file="exam-hovesh-1.html">
+                    <div class="card-icon">🩹</div>
+                    <div class="card-content">
+                        <div class="card-title">מבחן פתיחה חובש</div>
+                        <div class="card-subtitle">25 שאלות · טראומה וחילוץ</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
                 </div>
-                <span class="exam-badge">פעיל</span>
-            </div>
 
-            <!-- מבחן פתיחה מטב -->
-            <div class="exam-card" data-exam="מבחן פתיחה מט״ב" data-file="exam-metav-1.html">
-                <div class="exam-icon">👨‍⚕️</div>
-                <div class="exam-info">
-                    <div class="exam-title">מבחן פתיחה מט״ב</div>
-                    <div class="exam-subtitle">מבחן מקדים מטפל בכיר</div>
+                <div class="exam-card" data-exam="מבחן סיום חובש" data-file="exam-hovesh-2.html">
+                    <div class="card-icon">✅</div>
+                    <div class="card-content">
+                        <div class="card-title">מבחן סיום חובש</div>
+                        <div class="card-subtitle">מבחן גמר מלא</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
                 </div>
-                <span class="exam-badge">פעיל</span>
-            </div>
 
-            <!-- מבחן סיום מטב -->
-            <div class="exam-card" data-exam="מבחן סיום מט״ב" data-file="exam-metav-2.html">
-                <div class="exam-icon">🏆</div>
-                <div class="exam-info">
-                    <div class="exam-title">מבחן סיום מט״ב</div>
-                    <div class="exam-subtitle">מבחן גמר מטפל בכיר</div>
+                <div class="exam-card" data-exam="מבחן פתיחה מט״ב" data-file="exam-metav-1.html">
+                    <div class="card-icon">👨‍⚕️</div>
+                    <div class="card-content">
+                        <div class="card-title">מבחן פתיחה מט״ב</div>
+                        <div class="card-subtitle">מבחן מקדים מטפל בכיר</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
                 </div>
-                <span class="exam-badge">פעיל</span>
+
+                <div class="exam-card" data-exam="מבחן סיום מט״ב" data-file="exam-metav-2.html">
+                    <div class="card-icon">🏆</div>
+                    <div class="card-content">
+                        <div class="card-title">מבחן סיום מט״ב</div>
+                        <div class="card-subtitle">מבחן גמר מטפל בכיר</div>
+                    </div>
+                    <span class="card-badge active">פעיל</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- מסך טעינה -->
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner">
+        <div class="loading-content">
             <div class="spinner"></div>
             <p>טוען מבחנים...</p>
         </div>
     </div>
 
     <script>
-        // URL של ה-Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyBNcJzP2AIhXbVwYj-oDLmw_w0EPfPIqEuaX_rIsNj1ElMBgd30Fw2EHQ7hHubIIEw8g/exec';
 
-        // טעינת סטטוס המבחנים
         async function loadExamStatuses() {
             try {
-                console.log('📡 טוען סטטוס מבחנים...');
                 const response = await fetch(SCRIPT_URL + '?sheet=switch');
                 const data = await response.json();
 
-                if (!data.success) {
-                    throw new Error(data.error || 'שגיאה בטעינת סטטוס מבחנים');
-                }
+                if (!data.success) throw new Error(data.error || 'שגיאה בטעינת סטטוס מבחנים');
 
                 const switches = data.switches;
-                console.log('✅ סטטוסים נטענו:', switches);
 
-                // עבור כל כרטיס מבחן
                 document.querySelectorAll('.exam-card').forEach(card => {
                     const examName = card.getAttribute('data-exam');
                     const examFile = card.getAttribute('data-file');
                     const status = switches[examName];
 
                     if (status === 'OFF') {
-                        // נעילת המבחן
                         card.classList.add('locked');
-
-                        // הוספת אייקון מנעול
                         const lockIcon = document.createElement('div');
                         lockIcon.className = 'lock-icon';
                         lockIcon.innerHTML = '🔒';
                         card.insertBefore(lockIcon, card.firstChild);
 
-                        // שינוי הבאדג'
-                        const badge = card.querySelector('.exam-badge');
+                        const badge = card.querySelector('.card-badge');
                         if (badge) {
                             badge.textContent = 'חסום';
-                            badge.style.background = 'linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)';
+                            badge.classList.remove('active');
+                            badge.classList.add('locked');
                         }
 
-                        // חסימת לחיצה
                         card.onclick = (e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             alert('🔒 מבחן זה אינו זמין כרגע.\nפנה למדריך לפרטים נוספים.');
                         };
                     } else {
-                        // מבחן פעיל
-                        card.onclick = () => {
-                            window.location.href = examFile;
-                        };
+                        card.onclick = () => { window.location.href = examFile; };
                     }
                 });
 
-                // הסתרת מסך הטעינה
                 document.getElementById('loadingOverlay').style.display = 'none';
-
             } catch (error) {
-                console.error('❌ שגיאה בטעינת סטטוס מבחנים:', error);
+                console.error('שגיאה:', error);
                 document.getElementById('loadingOverlay').innerHTML = `
-                    <div class="loading-spinner">
-                        <p>⚠️ שגיאה בטעינת המבחנים</p>
-                        <p style="font-size: 0.9em; margin-top: 10px;">${error.message}</p>
-                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: white; color: #333; border: none; border-radius: 8px; cursor: pointer; font-family: 'Rubik', sans-serif; font-weight: 600;">נסה שוב</button>
+                    <div class="loading-content">
+                        <p style="color: #ff6b6b;">⚠️ שגיאה בטעינת המבחנים</p>
+                        <p style="font-size: 0.9em; margin-top: 10px; color: var(--text-muted);">${error.message}</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 12px 24px; background: var(--orange-primary); color: white; border: none; border-radius: 10px; cursor: pointer; font-family: 'Heebo', sans-serif; font-weight: 600;">נסה שוב</button>
                     </div>
                 `;
             }
         }
 
-        // הפעלה בטעינת העמוד
         window.addEventListener('DOMContentLoaded', loadExamStatuses);
 
-        function goBack() {
-            window.location.href = 'exams.html';
-        }
+        function goBack() { window.location.href = 'exams.html'; }
+        function goHome() { window.location.href = 'index.html'; }
 
-        function goHome() {
-            window.location.href = 'index.html';
-        }
-
-        // מניעת זום כפול
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function(e) {
             const now = Date.now();
-            if (now - lastTouchEnd <= 300) {
-                e.preventDefault();
-            }
+            if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
         }, false);
     </script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>בית</span>
+        </a>
+        <a href="lomdot2-page.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>לומדות</span>
+        </a>
+        <a href="exams.html" class="bottom-nav-item active">
+            <i class="fas fa-file-alt"></i>
+            <span>בחנים</span>
+        </a>
+        <a href="safrot-page.html" class="bottom-nav-item">
+            <i class="fas fa-book"></i>
+            <span>ספרות</span>
+        </a>
+        <a href="lessons-learned.html" class="bottom-nav-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>לקחים</span>
+        </a>
+    </nav>
 </body>
 </html>

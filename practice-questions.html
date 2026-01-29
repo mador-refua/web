@@ -6,500 +6,946 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <!-- Security Headers -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; media-src 'self' data:;">
 
-    <title>מאגר שאלות - מדור רפואה</title>
+    <!-- Description & Icons -->
+    <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף">
+    <link rel="icon" type="image/png" href="Assets/logo1.PNG">
+    <link rel="apple-touch-icon" href="Assets/logo1.PNG">
+    <meta name="theme-color" content="#1a1d23">
+    <meta name="apple-mobile-web-app-title" content="מדור רפואה">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>מאגר שאלות | מדור רפואה</title>
 
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Theme System -->
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
 
     <style>
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-bright: #FF8C42;
+            --orange-dark: #E85A24;
+            --orange-glow: rgba(255, 107, 53, 0.4);
+            --charcoal: #1a1d23;
+            --charcoal-light: #252931;
+            --charcoal-lighter: #2f343d;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+            --success: #10b981;
+            --error: #ef4444;
+            --gold: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Heebo', sans-serif;
+            background: var(--charcoal);
             min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        .bg-image { position: fixed; inset: 0; background: url('Assets/background.JPEG') center center / cover no-repeat; z-index: 0; }
+        .bg-overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%), linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%); z-index: 1; }
+        .bg-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%); z-index: 2; pointer-events: none; }
+
+        .main-container { position: relative; z-index: 10; min-height: 100vh; max-width: 500px; margin: 0 auto; }
+
+        /* Compact Header */
+        .header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(26, 29, 35, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right { display: flex; align-items: center; gap: 10px; }
+
+        .back-btn {
+            width: 36px; height: 36px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .back-btn:active { transform: scale(0.95); background: var(--charcoal-lighter); }
+
+        .page-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+
+        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .header-logos { display: flex; align-items: center; gap: 8px; }
+        .header-logos img { height: 28px; width: auto; }
+
+        .content { padding: 16px 16px 100px; }
+
+        /* Mode Selection Screen */
+        .mode-selection {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .mode-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .mode-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .mode-card {
+            background: var(--charcoal-light);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: right;
+        }
+
+        .mode-card:active {
+            transform: scale(0.98);
+            border-color: var(--orange-primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .mode-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            font-size: 1.5rem;
+            flex-shrink: 0;
         }
 
-        .quiz-container {
-            max-width: 700px;
-            width: 100%;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        .mode-card-icon.quick { background: linear-gradient(135deg, #10b981, #059669); }
+        .mode-card-icon.standard { background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark)); }
+        .mode-card-icon.marathon { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+
+        .mode-card-content { flex: 1; }
+        .mode-card-name { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+        .mode-card-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--charcoal-light);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-icon { font-size: 1.2rem; }
+        .stat-value { font-weight: 700; font-size: 1rem; }
+        .stat-label { font-size: 0.75rem; color: var(--text-muted); }
+
+        .streak-item .stat-value { color: var(--gold); }
+        .streak-item.on-fire .stat-icon { animation: fireShake 0.5s ease infinite; }
+
+        @keyframes fireShake {
+            0%, 100% { transform: scale(1) rotate(0); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .progress-mini {
+            flex: 1;
+            margin: 0 16px;
+            max-width: 120px;
+        }
+
+        .progress-mini-bar {
+            height: 6px;
+            background: var(--charcoal-lighter);
+            border-radius: 10px;
             overflow: hidden;
-            animation: slideIn 0.5s ease-out;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Header */
-        .quiz-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 25px 30px;
-            color: white;
-            text-align: center;
-        }
-
-        .quiz-title {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .progress-container {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50px;
-            height: 10px;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .progress-bar {
+        .progress-mini-fill {
             height: 100%;
-            background: linear-gradient(90deg, #48ff00 0%, #00ffd5 100%);
-            border-radius: 50px;
-            transition: width 0.5s ease;
-            box-shadow: 0 0 20px rgba(72, 255, 0, 0.5);
+            background: linear-gradient(90deg, var(--orange-primary), var(--gold));
+            border-radius: 10px;
+            transition: width 0.4s ease;
         }
 
-        .progress-text {
-            margin-top: 8px;
-            font-size: 0.9em;
-            opacity: 0.95;
+        .progress-mini-text {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 4px;
         }
 
-        /* Question */
-        .question-container {
-            padding: 40px 30px;
+        /* Question Card - Flashcard Style */
+        .card-wrapper {
+            perspective: 1000px;
         }
 
-        .question-number {
-            color: #667eea;
-            font-weight: 700;
-            font-size: 0.9em;
-            margin-bottom: 15px;
-        }
-
-        .question-text {
-            font-size: 1.4em;
-            font-weight: 600;
-            color: #2d3748;
-            line-height: 1.5;
-            margin-bottom: 30px;
-        }
-
-        /* Answers */
-        .answers-grid {
-            display: grid;
-            gap: 15px;
-        }
-
-        .answer-btn {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border: 3px solid transparent;
-            border-radius: 16px;
-            padding: 20px 25px;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: #2d3748;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: right;
+        .question-card {
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
             position: relative;
             overflow: hidden;
         }
 
-        .answer-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 5px;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.3s ease;
+        .question-card.entering {
+            animation: cardSlideIn 0.4s ease-out;
         }
 
-        .answer-btn:hover {
-            transform: translateX(-5px);
-            border-color: #667eea;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        .question-card.exiting {
+            animation: cardSlideOut 0.3s ease-in forwards;
         }
 
-        .answer-btn:hover::before {
-            width: 100%;
-            opacity: 0.1;
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: translateX(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
         }
 
-        .answer-btn.correct {
-            background: linear-gradient(135deg, #48ff00 0%, #00ffd5 100%);
+        @keyframes cardSlideOut {
+            from { opacity: 1; transform: translateX(0) scale(1); }
+            to { opacity: 0; transform: translateX(30px) scale(0.95); }
+        }
+
+        .question-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 107, 53, 0.15);
+            color: var(--orange-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Answer Options - Touch Friendly */
+        .answers-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .answer-option {
+            background: var(--charcoal-lighter);
+            border: 2px solid var(--border-light);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: right;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 52px;
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .answer-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+
+        .answer-text { flex: 1; }
+
+        .answer-option:active:not(.disabled) {
+            transform: scale(0.98);
+            border-color: var(--orange-primary);
+        }
+
+        .answer-option.selected {
+            border-color: var(--orange-primary);
+            background: rgba(255, 107, 53, 0.15);
+        }
+
+        .answer-option.selected .answer-letter {
+            background: var(--orange-primary);
             color: white;
-            border-color: #48ff00;
-            animation: correctPulse 0.6s ease;
         }
 
-        .answer-btn.wrong {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        .answer-option.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.15);
+            animation: correctPop 0.4s ease;
+        }
+
+        .answer-option.correct .answer-letter {
+            background: var(--success);
             color: white;
-            border-color: #ff6b6b;
-            animation: wrongShake 0.5s ease;
         }
 
-        .answer-btn.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .answer-option.wrong {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.15);
+            animation: wrongShake 0.4s ease;
+        }
+
+        .answer-option.wrong .answer-letter {
+            background: var(--error);
+            color: white;
+        }
+
+        .answer-option.disabled {
+            opacity: 0.6;
             pointer-events: none;
         }
 
-        @keyframes correctPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .answer-option.correct-reveal {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .answer-option.correct-reveal .answer-letter {
+            background: var(--success);
+            color: white;
+        }
+
+        @keyframes correctPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         @keyframes wrongShake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
         }
 
-        /* Feedback */
-        .feedback {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 12px;
+        /* Feedback Bubble */
+        .feedback-bubble {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 14px;
             display: none;
-            animation: fadeIn 0.4s ease;
+            animation: bubblePop 0.4s ease;
         }
 
-        .feedback.show {
-            display: block;
+        .feedback-bubble.show { display: block; }
+
+        @keyframes bubblePop {
+            0% { opacity: 0; transform: scale(0.9); }
+            50% { transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
-        .feedback.correct {
-            background: linear-gradient(135deg, rgba(72, 255, 0, 0.1) 0%, rgba(0, 255, 213, 0.1) 100%);
-            border: 2px solid #48ff00;
+        .feedback-bubble.correct {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1));
+            border: 1px solid var(--success);
         }
 
-        .feedback.wrong {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 111, 0.1) 100%);
-            border: 2px solid #ff6b6b;
+        .feedback-bubble.wrong {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1));
+            border: 1px solid var(--error);
         }
 
-        .feedback-icon {
-            font-size: 1.5em;
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 10px;
         }
 
+        .feedback-emoji { font-size: 1.5rem; }
+
         .feedback-title {
-            font-size: 1.3em;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 15px;
-            color: #2d3748;
+            color: var(--text-primary);
         }
 
         .feedback-tip {
-            font-size: 1.05em;
-            line-height: 1.7;
-            color: #2d3748;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 10px;
         }
 
-        /* Next Button */
+        /* Action Buttons */
+        .action-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .skip-btn {
+            flex: 1;
+            padding: 14px;
+            background: var(--charcoal-lighter);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .skip-btn:active { transform: scale(0.98); background: var(--charcoal-light); }
+
         .next-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            flex: 2;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 1.2em;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 20px;
             transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
             display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .next-btn.show {
-            display: block;
-            animation: slideUp 0.4s ease;
+            display: flex;
+            animation: slideUp 0.3s ease;
         }
 
-        .next-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .next-btn:active { transform: scale(0.98); }
 
         /* Loading & Complete */
-        .loading, .complete {
+        .loading-screen {
             text-align: center;
-            padding: 60px 30px;
+            padding: 60px 20px;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(102, 126, 234, 0.2);
-            border-top: 4px solid #667eea;
+            width: 50px; height: 50px;
+            border: 4px solid var(--charcoal-lighter);
+            border-top: 4px solid var(--orange-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .loading-text { font-size: 1rem; color: var(--text-secondary); }
+
+        /* Complete Screen - Celebration */
+        .complete-screen {
+            text-align: center;
+            padding: 30px 20px;
         }
 
-        .complete-icon {
-            font-size: 5em;
-            margin-bottom: 20px;
+        .complete-emoji {
+            font-size: 4rem;
+            margin-bottom: 16px;
             animation: bounceIn 0.6s ease;
         }
 
         @keyframes bounceIn {
             0% { transform: scale(0); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
         .complete-title {
-            font-size: 2em;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 15px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--orange-primary), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .complete-stats {
-            font-size: 1.2em;
-            color: #4a5568;
-            margin-bottom: 30px;
+        .complete-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+
+        .result-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .result-card {
+            background: var(--charcoal-light);
+            border-radius: 14px;
+            padding: 16px 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .result-card-icon { font-size: 1.5rem; margin-bottom: 6px; }
+        .result-card-value { font-size: 1.4rem; font-weight: 800; color: var(--text-primary); }
+        .result-card-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+        .result-card.score .result-card-value { color: var(--orange-primary); }
+        .result-card.streak .result-card-value { color: var(--gold); }
+        .result-card.correct .result-card-value { color: var(--success); }
+
+        .complete-message {
+            background: var(--charcoal-light);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .message-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .restart-btn, .home-btn {
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 14px 24px;
             border: none;
-            border-radius: 12px;
-            font-size: 1.1em;
+            border-radius: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            margin: 10px;
             transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .restart-btn:hover, .home-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        .restart-btn {
+            background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
+            color: white;
         }
+
+        .restart-btn:active { transform: scale(0.98); }
 
         .home-btn {
-            background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
+            background: var(--charcoal-lighter);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .home-btn:active { transform: scale(0.98); }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
         }
 
-        /* Responsive - Mobile Optimized */
-        @media (max-width: 600px) {
-            body {
-                padding: 0;
-            }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s ease-in-out forwards;
+        }
 
-            .quiz-container {
-                border-radius: 0;
-                box-shadow: none;
-            }
+        @keyframes confettiFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
 
-            .quiz-header {
-                padding: 20px 20px;
-            }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-            .quiz-title {
-                font-size: 1.5em;
-            }
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 29, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
 
-            .question-container {
-                padding: 25px 20px 100px 20px; /* Extra padding bottom for fixed button */
-            }
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.7rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 60px;
+        }
 
-            .question-text {
-                font-size: 1.1em;
-                margin-bottom: 20px;
-            }
+        .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
+        .bottom-nav-item.active { color: var(--orange-primary); }
+        .bottom-nav-item.active i { transform: scale(1.1); }
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 0 0 3px 3px;
+        }
+        .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
 
-            .answer-btn {
-                padding: 14px 18px;
-                font-size: 0.95em;
-            }
-
-            .feedback {
-                margin-top: 20px;
-                padding: 15px;
-            }
-
-            .feedback-icon {
-                font-size: 1.2em;
-            }
-
-            .feedback-title {
-                font-size: 1.1em;
-            }
-
-            .feedback-tip {
-                font-size: 0.95em;
-                padding: 12px;
-            }
-
-            .next-btn {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin: 0;
-                border-radius: 0;
-                padding: 16px;
-                font-size: 1.1em;
-                z-index: 1000;
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
-            }
+        /* Mobile optimizations */
+        @media (max-width: 400px) {
+            .header { padding: 10px 12px; }
+            .page-title { font-size: 1rem; }
+            .header-logos img { height: 24px; }
+            .content { padding: 12px 12px 90px; }
+            .mode-card { padding: 16px; gap: 12px; }
+            .mode-card-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+            .stats-bar { padding: 10px 12px; }
+            .question-card { padding: 16px; border-radius: 16px; }
+            .question-text { font-size: 1.05rem; }
+            .answer-option { padding: 12px 14px; min-height: 48px; }
+            .answer-letter { width: 26px; height: 26px; font-size: 0.8rem; }
+            .result-cards { gap: 8px; }
+            .result-card { padding: 12px 10px; }
+            .result-card-value { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
-    <div class="quiz-container">
-        <!-- Header -->
-        <div class="quiz-header">
-            <h1 class="quiz-title">📚 מאגר שאלות</h1>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-vignette"></div>
+
+    <div class="main-container">
+        <header class="header">
+            <div class="header-right">
+                <button class="back-btn" onclick="goHome()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <h1 class="page-title">מאגר שאלות</h1>
             </div>
-            <div class="progress-text" id="progressText">שאלה 0 מתוך 0</div>
-        </div>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
+                    <i class="fas fa-sun"></i>
+                </button>
+                <div class="header-logos">
+                    <img src="Assets/logo1.PNG" alt="Logo 1">
+                    <img src="Assets/logo2.PNG" alt="Logo 2">
+                </div>
+            </div>
+        </header>
 
-        <!-- Loading -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <div>טוען שאלות...</div>
-        </div>
-
-        <!-- Question Container -->
-        <div class="question-container" id="questionContainer" style="display: none;">
-            <div class="question-number" id="questionNumber">שאלה 1</div>
-            <div class="question-text" id="questionText"></div>
-
-            <div class="answers-grid" id="answersGrid"></div>
-
-            <div class="feedback" id="feedback">
-                <div class="feedback-icon" id="feedbackIcon"></div>
-                <div class="feedback-title" id="feedbackTitle"></div>
-                <div class="feedback-tip" id="feedbackTip"></div>
+        <div class="content">
+            <!-- Loading -->
+            <div class="loading-screen" id="loading">
+                <div class="spinner"></div>
+                <div class="loading-text">טוען שאלות...</div>
             </div>
 
-            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
-                שאלה הבאה ←
-            </button>
+            <!-- Mode Selection -->
+            <div class="mode-selection" id="modeSelection" style="display: none;">
+                <div class="mode-title">בחר מצב תרגול</div>
+                <div class="mode-subtitle">כמה שאלות תרצה לתרגל?</div>
+                <div class="mode-cards">
+                    <div class="mode-card" onclick="startPractice(5)">
+                        <div class="mode-card-icon quick">⚡</div>
+                        <div class="mode-card-content">
+                            <div class="mode-card-name">תרגול מהיר</div>
+                            <div class="mode-card-desc">5 שאלות - מושלם להפסקה קצרה</div>
+                        </div>
+                    </div>
+                    <div class="mode-card" onclick="startPractice(10)">
+                        <div class="mode-card-icon standard">🎯</div>
+                        <div class="mode-card-content">
+                            <div class="mode-card-name">תרגול רגיל</div>
+                            <div class="mode-card-desc">10 שאלות - אימון מאוזן</div>
+                        </div>
+                    </div>
+                    <div class="mode-card" onclick="startPractice(0)">
+                        <div class="mode-card-icon marathon">🏆</div>
+                        <div class="mode-card-content">
+                            <div class="mode-card-name">מרתון</div>
+                            <div class="mode-card-desc">כל השאלות - לאימון מעמיק</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Container -->
+            <div id="practiceContainer" style="display: none;">
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-item streak-item" id="streakItem">
+                        <span class="stat-icon">🔥</span>
+                        <span class="stat-value" id="streakValue">0</span>
+                    </div>
+                    <div class="progress-mini">
+                        <div class="progress-mini-bar">
+                            <div class="progress-mini-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-mini-text" id="progressText">0 / 0</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">✅</span>
+                        <span class="stat-value" id="correctValue">0</span>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="card-wrapper">
+                    <div class="question-card" id="questionCard">
+                        <div class="question-badge" id="questionBadge">
+                            <i class="fas fa-question-circle"></i>
+                            <span id="questionNumber">שאלה 1</span>
+                        </div>
+                        <div class="question-text" id="questionText"></div>
+
+                        <div class="answers-list" id="answersList"></div>
+
+                        <div class="feedback-bubble" id="feedback">
+                            <div class="feedback-header">
+                                <span class="feedback-emoji" id="feedbackEmoji"></span>
+                                <span class="feedback-title" id="feedbackTitle"></span>
+                            </div>
+                            <div class="feedback-tip" id="feedbackTip"></div>
+                        </div>
+
+                        <div class="action-row">
+                            <button class="skip-btn" id="skipBtn" onclick="skipQuestion()">
+                                <i class="fas fa-forward"></i>
+                                דלג
+                            </button>
+                            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+                                המשך
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Screen -->
+            <div class="complete-screen" id="completeScreen" style="display: none;">
+                <div class="complete-emoji" id="completeEmoji">🎉</div>
+                <div class="complete-title" id="completeTitle">כל הכבוד!</div>
+                <div class="complete-subtitle" id="completeSubtitle">סיימת את התרגול</div>
+
+                <div class="result-cards">
+                    <div class="result-card score">
+                        <div class="result-card-icon">📊</div>
+                        <div class="result-card-value" id="scoreValue">0%</div>
+                        <div class="result-card-label">ציון</div>
+                    </div>
+                    <div class="result-card streak">
+                        <div class="result-card-icon">🔥</div>
+                        <div class="result-card-value" id="maxStreakValue">0</div>
+                        <div class="result-card-label">רצף מקסימלי</div>
+                    </div>
+                    <div class="result-card correct">
+                        <div class="result-card-icon">✅</div>
+                        <div class="result-card-value" id="correctTotal">0/0</div>
+                        <div class="result-card-label">תשובות נכונות</div>
+                    </div>
+                </div>
+
+                <div class="complete-message">
+                    <div class="message-text" id="completeMessage">המשך לתרגל כדי להשתפר!</div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="restart-btn" onclick="restartQuiz()">
+                        <i class="fas fa-redo"></i>
+                        תרגול חדש
+                    </button>
+                    <button class="home-btn" onclick="goHome()">
+                        <i class="fas fa-home"></i>
+                        חזרה לתפריט
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- Complete Screen -->
-        <div class="complete" id="completeScreen" style="display: none;">
-            <div class="complete-icon">🎉</div>
-            <div class="complete-title">כל הכבוד!</div>
-            <div class="complete-stats" id="completeStats"></div>
-            <button class="restart-btn" onclick="restartQuiz()">התחל מחדש</button>
-            <button class="home-btn" onclick="goHome()">חזרה לתפריט</button>
-        </div>
+        <!-- Confetti Container -->
+        <div class="confetti-container" id="confettiContainer"></div>
     </div>
 
     <script>
         const QUESTIONS_URL = 'https://script.google.com/macros/s/AKfycbwEVk6OnEEpZqbNYbP_fbzVQcQgSkBeHCvY6-piO0QLkP6q4jaorsROOdq82m8915NF/exec';
 
+        let allQuestions = [];
         let questions = [];
         let currentQuestionIndex = 0;
         let correctCount = 0;
+        let streak = 0;
+        let maxStreak = 0;
         let answered = false;
+        let practiceMode = 10;
+        let skippedCount = 0;
 
-        // Sound effects (Data URLs - very small)
-        const correctSound = new Audio('data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
-        const wrongSound = new Audio('data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
+        const answerLetters = ['א', 'ב', 'ג', 'ד'];
 
-        // Load questions
+        const encouragements = [
+            'מעולה! אתה על גל! 🌊',
+            'וואו! ממש מרשים! 💪',
+            'אלוף! המשך כך! 🏆',
+            'נכון מאוד! 🎯',
+            'יפה מאוד! ✨',
+            'מצוין! 👏'
+        ];
+
+        const wrongEncouragements = [
+            'לא נורא, למד מזה! 📚',
+            'טעויות זה חלק מהתהליך 💡',
+            'בפעם הבאה תצליח! 💪',
+            'המשך לנסות! 🎯'
+        ];
+
+        const completeMessages = {
+            perfect: 'מושלם! אתה מוכן למבחן! 🏆',
+            great: 'עבודה מצוינת! כמעט שם! 🌟',
+            good: 'יפה מאוד! המשך לתרגל! 💪',
+            okay: 'התחלה טובה! תרגול נוסף יעזור 📚',
+            needsWork: 'אל תוותר! תרגול עושה מושלם! 🎯'
+        };
+
         async function loadQuestions() {
             try {
-                console.log('🔄 טוען שאלות...');
                 const response = await fetch(QUESTIONS_URL);
                 const data = await response.json();
 
                 if (!data.success) {
-                    throw new Error(data.error || 'שגיאה בטעינת שאלות');
+                    throw new Error(data.error || 'Error loading questions');
                 }
 
-                questions = data.questions.filter(q =>
+                allQuestions = data.questions.filter(q =>
                     q.question && q.answer1 && q.answer2 && q.answer3 && q.answer4 && q.correct
                 );
 
-                // Shuffle questions
-                questions = shuffleArray(questions);
-
-                console.log(`✅ ${questions.length} שאלות נטענו`);
-                console.log('📋 דוגמה לשאלה:', questions[0]);
-
-                if (questions.length === 0) {
-                    throw new Error('לא נמצאו שאלות במערכת');
+                if (allQuestions.length === 0) {
+                    throw new Error('No questions found');
                 }
 
-                startQuiz();
+                showModeSelection();
 
             } catch (error) {
-                console.error('❌ שגיאה:', error);
-                document.getElementById('loading').innerHTML = `
-                    <div style="color: #ff6b6b; font-weight: 600;">
-                        ⚠️ שגיאה בטעינת שאלות<br>
-                        <small>${error.message}</small>
-                    </div>
-                `;
+                console.error('Error:', error);
+                const loadingEl = document.getElementById('loading');
+                loadingEl.textContent = '';
+
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = 'color: var(--error); font-weight: 600;';
+
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-exclamation-triangle';
+                icon.style.cssText = 'font-size: 2rem; margin-bottom: 15px; display: block;';
+
+                const msg = document.createElement('div');
+                msg.textContent = 'שגיאה בטעינת שאלות';
+
+                const small = document.createElement('small');
+                small.style.color = 'var(--text-muted)';
+                small.textContent = error.message;
+
+                errorDiv.appendChild(icon);
+                errorDiv.appendChild(msg);
+                errorDiv.appendChild(small);
+                loadingEl.appendChild(errorDiv);
             }
         }
 
-        // Shuffle array
         function shuffleArray(array) {
             const arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -509,32 +955,63 @@
             return arr;
         }
 
-        // Start quiz
-        function startQuiz() {
+        function showModeSelection() {
             document.getElementById('loading').style.display = 'none';
-            document.getElementById('questionContainer').style.display = 'block';
+            document.getElementById('modeSelection').style.display = 'block';
+        }
+
+        function startPractice(count) {
+            practiceMode = count;
+            questions = shuffleArray([...allQuestions]);
+
+            if (count > 0 && count < questions.length) {
+                questions = questions.slice(0, count);
+            }
+
+            currentQuestionIndex = 0;
+            correctCount = 0;
+            streak = 0;
+            maxStreak = 0;
+            skippedCount = 0;
+
+            document.getElementById('modeSelection').style.display = 'none';
+            document.getElementById('practiceContainer').style.display = 'block';
+
+            updateStats();
             showQuestion();
         }
 
-        // Show current question
+        function updateStats() {
+            document.getElementById('streakValue').textContent = streak;
+            document.getElementById('correctValue').textContent = correctCount;
+
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${currentQuestionIndex} / ${questions.length}`;
+
+            const streakItem = document.getElementById('streakItem');
+            if (streak >= 3) {
+                streakItem.classList.add('on-fire');
+            } else {
+                streakItem.classList.remove('on-fire');
+            }
+        }
+
         function showQuestion() {
             answered = false;
 
+            const card = document.getElementById('questionCard');
+            card.classList.remove('exiting');
+            card.classList.add('entering');
+            setTimeout(() => card.classList.remove('entering'), 400);
+
             const question = questions[currentQuestionIndex];
-            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
-            // Update progress
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('progressText').textContent =
-                `שאלה ${currentQuestionIndex + 1} מתוך ${questions.length}`;
-
-            // Update question
             document.getElementById('questionNumber').textContent = `שאלה ${currentQuestionIndex + 1}`;
             document.getElementById('questionText').textContent = question.question;
 
-            // Create answers
-            const answersGrid = document.getElementById('answersGrid');
-            answersGrid.innerHTML = '';
+            const answersList = document.getElementById('answersList');
+            answersList.textContent = '';
 
             const answers = [
                 { text: question.answer1, num: 1 },
@@ -543,21 +1020,32 @@
                 { text: question.answer4, num: 4 }
             ];
 
-            answers.forEach(answer => {
+            answers.forEach((answer, index) => {
                 const btn = document.createElement('button');
-                btn.className = 'answer-btn';
-                btn.textContent = answer.text;
-                btn.onclick = () => selectAnswer(answer.num);
-                answersGrid.appendChild(btn);
+                btn.className = 'answer-option';
+
+                const letter = document.createElement('span');
+                letter.className = 'answer-letter';
+                letter.textContent = answerLetters[index];
+
+                const text = document.createElement('span');
+                text.className = 'answer-text';
+                text.textContent = answer.text;
+
+                btn.appendChild(letter);
+                btn.appendChild(text);
+                btn.onclick = () => selectAnswer(answer.num, btn);
+                answersList.appendChild(btn);
             });
 
-            // Hide feedback and next button
-            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('feedback').classList.remove('show', 'correct', 'wrong');
             document.getElementById('nextBtn').classList.remove('show');
+            document.getElementById('skipBtn').style.display = 'flex';
+
+            updateStats();
         }
 
-        // Select answer
-        function selectAnswer(selectedNum) {
+        function selectAnswer(selectedNum, selectedBtn) {
             if (answered) return;
             answered = true;
 
@@ -565,23 +1053,24 @@
             const correct = parseInt(question.correct);
             const isCorrect = selectedNum === correct;
 
-            console.log('🔍 שאלה נוכחית:', question);
-            console.log('💡 TIP:', question.TIP);
-
-            // Update buttons
-            const buttons = document.querySelectorAll('.answer-btn');
+            const buttons = document.querySelectorAll('.answer-option');
             buttons.forEach((btn, index) => {
                 btn.classList.add('disabled');
                 if (index + 1 === correct) {
-                    btn.classList.add('correct');
-                } else if (index + 1 === selectedNum && !isCorrect) {
-                    btn.classList.add('wrong');
+                    if (isCorrect) {
+                        btn.classList.add('correct');
+                    } else {
+                        btn.classList.add('correct-reveal');
+                    }
                 }
             });
 
-            // Show feedback
+            if (!isCorrect) {
+                selectedBtn.classList.add('wrong');
+            }
+
             const feedback = document.getElementById('feedback');
-            const feedbackIcon = document.getElementById('feedbackIcon');
+            const feedbackEmoji = document.getElementById('feedbackEmoji');
             const feedbackTitle = document.getElementById('feedbackTitle');
             const feedbackTip = document.getElementById('feedbackTip');
 
@@ -589,77 +1078,152 @@
             feedback.classList.add(isCorrect ? 'correct' : 'wrong');
             feedback.classList.add('show');
 
+            const tipValue = question.TIP || question['TIP '] || question.tip || question.Tip || question.טיפ || '';
+            const tipText = tipValue.toString().trim();
+
             if (isCorrect) {
                 correctCount++;
-                feedbackIcon.textContent = '✅';
-                feedbackTitle.textContent = 'נכון מאוד!';
-                // Check if TIP exists and is not empty
-                const tip = question.TIP && question.TIP.toString().trim() !== '' ? question.TIP : 'תשובה מצוינת! המשך כך!';
-                feedbackTip.textContent = tip;
-                playSound(correctSound);
+                streak++;
+                if (streak > maxStreak) maxStreak = streak;
+
+                feedbackEmoji.textContent = streak >= 3 ? '🔥' : '✅';
+                feedbackTitle.textContent = streak >= 3
+                    ? `רצף של ${streak}! ` + encouragements[Math.floor(Math.random() * encouragements.length)]
+                    : encouragements[Math.floor(Math.random() * encouragements.length)];
+                feedbackTip.textContent = tipText !== '' ? tipText : 'תשובה נכונה! המשך כך!';
+
+                if (streak >= 5) {
+                    createConfetti();
+                }
             } else {
-                feedbackIcon.textContent = '❌';
-                feedbackTitle.textContent = 'לא נכון';
-                // Check if TIP exists and is not empty
-                const tip = question.TIP && question.TIP.toString().trim() !== '' ? question.TIP : 'לא נורא! למד מהטעות והמשך קדימה.';
-                feedbackTip.textContent = tip;
-                playSound(wrongSound);
+                streak = 0;
+                feedbackEmoji.textContent = '💡';
+                feedbackTitle.textContent = wrongEncouragements[Math.floor(Math.random() * wrongEncouragements.length)];
+                feedbackTip.textContent = tipText !== '' ? tipText : 'התשובה הנכונה מסומנת בירוק. שווה לזכור לפעם הבאה!';
             }
 
-            // Show next button
+            document.getElementById('skipBtn').style.display = 'none';
             document.getElementById('nextBtn').classList.add('show');
+            updateStats();
         }
 
-        // Play sound
-        function playSound(sound) {
-            try {
-                sound.currentTime = 0;
-                sound.play().catch(e => console.log('Sound disabled'));
-            } catch (e) {
-                // Silent fail if sound blocked
-            }
+        function skipQuestion() {
+            if (answered) return;
+            skippedCount++;
+            streak = 0;
+            nextQuestion();
         }
 
-        // Next question
         function nextQuestion() {
-            currentQuestionIndex++;
+            const card = document.getElementById('questionCard');
+            card.classList.add('exiting');
 
-            if (currentQuestionIndex >= questions.length) {
-                showComplete();
-            } else {
-                showQuestion();
-            }
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex >= questions.length) {
+                    showComplete();
+                } else {
+                    showQuestion();
+                }
+            }, 300);
         }
 
-        // Show complete screen
         function showComplete() {
-            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('practiceContainer').style.display = 'none';
             document.getElementById('completeScreen').style.display = 'block';
 
-            const percentage = Math.round((correctCount / questions.length) * 100);
-            document.getElementById('completeStats').innerHTML = `
-                ענית נכון על <strong>${correctCount}</strong> מתוך <strong>${questions.length}</strong> שאלות<br>
-                <strong style="color: #667eea; font-size: 1.5em;">${percentage}%</strong>
-            `;
+            const answered = questions.length - skippedCount;
+            const percentage = answered > 0 ? Math.round((correctCount / answered) * 100) : 0;
+
+            document.getElementById('scoreValue').textContent = percentage + '%';
+            document.getElementById('maxStreakValue').textContent = maxStreak;
+            document.getElementById('correctTotal').textContent = `${correctCount}/${answered}`;
+
+            let emoji, title, message;
+            if (percentage === 100) {
+                emoji = '🏆';
+                title = 'מושלם!';
+                message = completeMessages.perfect;
+            } else if (percentage >= 80) {
+                emoji = '🌟';
+                title = 'מעולה!';
+                message = completeMessages.great;
+            } else if (percentage >= 60) {
+                emoji = '💪';
+                title = 'יפה מאוד!';
+                message = completeMessages.good;
+            } else if (percentage >= 40) {
+                emoji = '📚';
+                title = 'טוב!';
+                message = completeMessages.okay;
+            } else {
+                emoji = '🎯';
+                title = 'המשך לתרגל!';
+                message = completeMessages.needsWork;
+            }
+
+            document.getElementById('completeEmoji').textContent = emoji;
+            document.getElementById('completeTitle').textContent = title;
+            document.getElementById('completeMessage').textContent = message;
+
+            if (percentage >= 80) {
+                setTimeout(createConfetti, 300);
+            }
         }
 
-        // Restart quiz
+        function createConfetti() {
+            const container = document.getElementById('confettiContainer');
+            const colors = ['#FF6B35', '#fbbf24', '#10b981', '#8b5cf6', '#ef4444', '#3b82f6'];
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    container.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
         function restartQuiz() {
-            currentQuestionIndex = 0;
-            correctCount = 0;
-            questions = shuffleArray(questions);
             document.getElementById('completeScreen').style.display = 'none';
-            document.getElementById('questionContainer').style.display = 'block';
-            showQuestion();
+            document.getElementById('modeSelection').style.display = 'block';
         }
 
-        // Go home
         function goHome() {
             window.location.href = 'exams.html';
         }
 
-        // Load on start
         window.addEventListener('load', loadQuestions);
     </script>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>בית</span>
+        </a>
+        <a href="lomdot2-page.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>לומדות</span>
+        </a>
+        <a href="exams.html" class="bottom-nav-item active">
+            <i class="fas fa-file-alt"></i>
+            <span>בחנים</span>
+        </a>
+        <a href="safrot-page.html" class="bottom-nav-item">
+            <i class="fas fa-book"></i>
+            <span>ספרות</span>
+        </a>
+        <a href="lessons-learned.html" class="bottom-nav-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>לקחים</span>
+        </a>
+    </nav>
 </body>
 </html>
