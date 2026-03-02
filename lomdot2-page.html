@@ -485,14 +485,14 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 8px 12px;
+            padding: 6px 8px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
-            min-width: 60px;
+            min-width: 52px;
         }
 
         .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
@@ -510,6 +510,8 @@
             border-radius: 0 0 3px 3px;
         }
         .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
+        .bottom-nav-item.active.instructor-tab { color: #818cf8; }
+        .bottom-nav-item.active.instructor-tab::before { background: #818cf8; }
 
         @media (max-width: 380px) {
             .header { padding: 12px 14px; }
@@ -542,8 +544,8 @@
                     <i class="fas fa-sun"></i>
                 </button>
                 <div class="header-logos">
-                    <img src="Assets/logo1.PNG" alt="Logo 1">
-                    <img src="Assets/logo2.PNG" alt="Logo 2">
+                    <picture><source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG" alt="Logo 1"></picture>
+                    <picture><source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG" alt="Logo 2"></picture>
                 </div>
             </div>
         </header>
@@ -564,13 +566,19 @@
             <div class="video-count" id="videoCount">
                 <strong>0</strong> סרטונים
             </div>
-            <div class="view-toggle">
-                <button class="toggle-btn active" id="gridBtn" onclick="setView('grid')">
-                    <i class="fas fa-th-large"></i>
+            <div class="stats-right">
+                <span class="cache-age" id="cacheAge"></span>
+                <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()" title="ריענון">
+                    <i class="fas fa-sync-alt"></i>
                 </button>
-                <button class="toggle-btn" id="listBtn" onclick="setView('list')">
-                    <i class="fas fa-list"></i>
-                </button>
+                <div class="view-toggle">
+                    <button class="toggle-btn active" id="gridBtn" onclick="setView('grid')">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="toggle-btn" id="listBtn" onclick="setView('list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -621,7 +629,36 @@
     <script>
         const VIDEOS_URL = 'https://script.google.com/macros/s/AKfycbzT_F2coz6EOWSFER7dyRs9rq4NNLWDqTq2Xw2mQnpp3mvOS-4EKeNksK1JQrF_A3w/exec';
         const RECENT_KEY = 'lomdot_recent';
-        const VIEW_KEY = 'lomdot_view';
+        const VIEW_KEY   = 'lomdot_view';
+        const CACHE_KEY  = 'lomdot_cache';
+        const CACHE_TTL  = 10 * 60 * 1000; // 10 minutes
+
+        // ---- Cache helpers ----
+        function saveCache(cacheKey, data) {
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+                localStorage.setItem(cacheKey + '_ts', Date.now());
+            } catch(e) {}
+        }
+        function loadCache(cacheKey, ttl) {
+            const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
+            if (Date.now() - ts > ttl) return null;
+            try { return JSON.parse(localStorage.getItem(cacheKey)); } catch(e) { return null; }
+        }
+        function showCacheAge(elId, cacheKey) {
+            const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
+            if (!ts) { document.getElementById(elId).textContent = ''; return; }
+            const mins = Math.round((Date.now() - ts) / 60000);
+            document.getElementById(elId).textContent = mins < 1 ? 'עדכני' : 'לפני ' + mins + ' דק\'';
+        }
+
+        function forceRefresh() {
+            localStorage.removeItem(CACHE_KEY);
+            localStorage.removeItem(CACHE_KEY + '_ts');
+            const btn = document.getElementById('refreshBtn');
+            btn.classList.add('spinning');
+            loadVideos().finally(() => btn.classList.remove('spinning'));
+        }
 
         let allVideos = [];
         let filteredVideos = [];
@@ -644,6 +681,16 @@
         }
 
         async function loadVideos() {
+            const cached = loadCache(CACHE_KEY, CACHE_TTL);
+            if (cached && cached.length > 0) {
+                allVideos = cached;
+                buildCategories();
+                filteredVideos = [...allVideos];
+                document.getElementById('loadingScreen').style.display = 'none';
+                initUI();
+                showCacheAge('cacheAge', CACHE_KEY);
+                return;
+            }
             try {
                 const response = await fetch(VIDEOS_URL);
                 if (!response.ok) throw new Error('שגיאת שרת');
@@ -663,14 +710,15 @@
 
                 if (allVideos.length === 0) throw new Error('לא נמצאו סרטונים');
 
+                saveCache(CACHE_KEY, allVideos);
                 buildCategories();
                 filteredVideos = [...allVideos];
 
                 document.getElementById('loadingScreen').style.display = 'none';
                 initUI();
+                showCacheAge('cacheAge', CACHE_KEY);
 
             } catch (error) {
-                console.error('Error:', error);
                 showError('לא ניתן לטעון את הסרטונים כרגע');
             }
         }
@@ -949,6 +997,10 @@
         <a href="lessons-learned.html" class="bottom-nav-item">
             <i class="fas fa-exclamation-triangle"></i>
             <span>לקחים</span>
+        </a>
+        <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>הדרכה</span>
         </a>
     </nav>
 </body>

@@ -206,14 +206,14 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 8px 12px;
+            padding: 6px 8px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
-            min-width: 60px;
+            min-width: 52px;
         }
 
         .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
@@ -232,6 +232,8 @@
         }
         .bottom-nav-item:not(.active):hover { color: var(--text-secondary); }
         .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
+        .bottom-nav-item.active.instructor-tab { color: #818cf8; }
+        .bottom-nav-item.active.instructor-tab::before { background: #818cf8; }
 
         .main-container { padding-bottom: 80px; }
 
@@ -260,8 +262,8 @@
                 <h1 class="page-title">מטפל מחלץ</h1>
             </div>
             <div class="header-logos">
-                <img src="Assets/logo1.PNG" alt="Logo 1">
-                <img src="Assets/logo2.PNG" alt="Logo 2">
+                <picture><source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG" alt="Logo 1"></picture>
+                <picture><source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG" alt="Logo 2"></picture>
             </div>
         </header>
 
@@ -407,6 +409,10 @@
         <a href="lessons-learned.html" class="bottom-nav-item">
             <i class="fas fa-exclamation-triangle"></i>
             <span>לקחים</span>
+        </a>
+        <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>הדרכה</span>
         </a>
     </nav>
 </body>
