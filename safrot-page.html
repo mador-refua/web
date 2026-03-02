@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +11,8 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
 
     <!-- Description & Icons -->
     <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף">
@@ -23,8 +25,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Theme System -->
     <link rel="stylesheet" href="theme.css">
@@ -46,7 +50,12 @@
             --border-light: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: 'Heebo', sans-serif;
@@ -57,11 +66,35 @@
             color: var(--text-primary);
         }
 
-        .bg-image { position: fixed; inset: 0; background: url('Assets/background.JPEG') center center / cover no-repeat; z-index: 0; }
-        .bg-overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%), linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%); z-index: 1; }
-        .bg-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%); z-index: 2; pointer-events: none; }
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('Assets/background.JPEG') center center / cover no-repeat;
+            z-index: 0;
+        }
 
-        .main-container { position: relative; z-index: 10; min-height: 100vh; max-width: 500px; margin: 0 auto; }
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%), linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+        }
 
         .header {
             padding: 20px 24px;
@@ -77,40 +110,79 @@
             z-index: 100;
         }
 
-        .header-right { display: flex; align-items: center; gap: 12px; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
         .back-btn {
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             background: var(--charcoal-light);
             border: 1px solid var(--border-light);
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
             color: var(--text-secondary);
             font-size: 1rem;
         }
 
-        .back-btn:hover { background: var(--charcoal-lighter); border-color: var(--orange-primary); color: var(--orange-primary); }
+        .back-btn:hover {
+            background: var(--charcoal-lighter);
+            border-color: var(--orange-primary);
+            color: var(--orange-primary);
+        }
 
-        .page-title { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .header-logos { display: flex; align-items: center; gap: 12px; }
-        .header-logos img { height: 36px; width: auto; }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-        .content { padding: 24px 20px 40px; }
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-        .loading-screen { text-align: center; padding: 60px 20px; }
+        .header-logos img {
+            height: 36px;
+            width: auto;
+        }
+
+        .content {
+            padding: 24px 20px 40px;
+        }
+
+        .loading-screen {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
         .loading-spinner {
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             border: 4px solid var(--charcoal-lighter);
             border-top: 4px solid var(--orange-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 20px;
         }
-        .loading-text { font-size: 1rem; color: var(--text-secondary); }
+
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
 
         .error-message {
             background: rgba(239, 68, 68, 0.1);
@@ -147,7 +219,9 @@
         .document-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 3px;
             background: linear-gradient(90deg, var(--orange-primary), var(--orange-bright));
             transform: scaleX(0);
@@ -161,11 +235,66 @@
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 107, 53, 0.1);
         }
 
-        .document-card:hover::before { transform: scaleX(1); transform-origin: left; }
-        .document-card:active { transform: translateY(-2px) scale(0.98); }
+        .document-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
 
-        .document-emoji { font-size: 2.5rem; margin-bottom: 12px; transition: all 0.3s ease; }
-        .document-card:hover .document-emoji { transform: scale(1.1); }
+        .document-card:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        /* ===== REFRESH BUTTON ===== */
+        .refresh-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 0.85rem;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--orange-primary);
+            color: var(--orange-primary);
+        }
+
+        .refresh-btn:active {
+            transform: scale(0.92);
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.7s linear infinite;
+        }
+
+        .cache-age {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            align-self: center;
+        }
+
+        .stats-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+
+        .document-emoji {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .document-card:hover .document-emoji {
+            transform: scale(1.1);
+        }
 
         .document-title {
             font-size: 0.9rem;
@@ -179,7 +308,9 @@
             transition: color 0.3s ease;
         }
 
-        .document-card:hover .document-title { color: var(--orange-primary); }
+        .document-card:hover .document-title {
+            color: var(--orange-primary);
+        }
 
         .pdf-badge {
             position: absolute;
@@ -194,8 +325,27 @@
             letter-spacing: 0.5px;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* Bottom Navigation */
         .bottom-nav {
@@ -220,19 +370,29 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 8px 12px;
+            padding: 6px 8px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
-            min-width: 60px;
+            min-width: 52px;
         }
 
-        .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
-        .bottom-nav-item.active { color: var(--orange-primary); }
-        .bottom-nav-item.active i { transform: scale(1.1); }
+        .bottom-nav-item i {
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--orange-primary);
+        }
+
+        .bottom-nav-item.active i {
+            transform: scale(1.1);
+        }
+
         .bottom-nav-item.active::before {
             content: '';
             position: absolute;
@@ -244,23 +404,65 @@
             background: var(--orange-primary);
             border-radius: 0 0 3px 3px;
         }
-        .bottom-nav-item:not(.active):hover { color: var(--text-secondary); }
-        .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
 
-        .main-container { padding-bottom: 80px; }
+        .bottom-nav-item:not(.active):hover {
+            color: var(--text-secondary);
+        }
+
+        .bottom-nav-item:not(.active):active {
+            color: var(--orange-primary);
+            transform: scale(0.95);
+        }
+
+        .bottom-nav-item.active.instructor-tab {
+            color: #818cf8;
+        }
+
+        .bottom-nav-item.active.instructor-tab::before {
+            background: #818cf8;
+        }
+
+        .main-container {
+            padding-bottom: 80px;
+        }
 
         @media (max-width: 400px) {
-            .header { padding: 16px 20px; }
-            .page-title { font-size: 1.2rem; }
-            .header-logos img { height: 32px; }
-            .content { padding: 20px 16px 32px; }
-            .documents-grid { gap: 12px; }
-            .document-card { padding: 16px 12px; min-height: 120px; }
-            .document-emoji { font-size: 2rem; }
-            .document-title { font-size: 0.85rem; }
+            .header {
+                padding: 16px 20px;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .header-logos img {
+                height: 32px;
+            }
+
+            .content {
+                padding: 20px 16px 32px;
+            }
+
+            .documents-grid {
+                gap: 12px;
+            }
+
+            .document-card {
+                padding: 16px 12px;
+                min-height: 120px;
+            }
+
+            .document-emoji {
+                font-size: 2rem;
+            }
+
+            .document-title {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="bg-image"></div>
     <div class="bg-overlay"></div>
@@ -279,8 +481,14 @@
                     <i class="fas fa-sun"></i>
                 </button>
                 <div class="header-logos">
-                    <img src="Assets/logo1.PNG" alt="Logo 1">
-                    <img src="Assets/logo2.PNG" alt="Logo 2">
+                    <picture>
+                        <source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG"
+                            alt="Logo 1">
+                    </picture>
+                    <picture>
+                        <source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG"
+                            alt="Logo 2">
+                    </picture>
                 </div>
             </div>
         </header>
@@ -298,6 +506,10 @@
                 </div>
             </div>
 
+            <div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+                <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()" title="ריענון"><i
+                        class="fas fa-sync-alt"></i></button>
+            </div>
             <div id="documents-grid" class="documents-grid" style="display: none;"></div>
         </div>
     </div>
@@ -308,13 +520,44 @@
         let documents = [];
         let lastLoadTime = 0;
         const RATE_LIMIT_MS = 2000;
+        const CACHE_KEY = 'safrot_cache';
+        const CACHE_TTL = 10 * 60 * 1000;
+
+        // ---- Cache helpers ----
+        function saveCache(cacheKey, data) {
+            try {
+                localStorage.setItem(cacheKey, JSON.stringify(data));
+                localStorage.setItem(cacheKey + '_ts', Date.now());
+            } catch (e) { }
+        }
+        function loadCache(cacheKey, ttl) {
+            const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
+            if (Date.now() - ts > ttl) return null;
+            try { return JSON.parse(localStorage.getItem(cacheKey)); } catch (e) { return null; }
+        }
+        function showCacheAge(elId, cacheKey) {
+            const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
+            if (!ts) { document.getElementById(elId).textContent = ''; return; }
+            const mins = Math.round((Date.now() - ts) / 60000);
+            document.getElementById(elId).textContent = mins < 1 ? 'עדכני' : 'לפני ' + mins + ' דק\'';
+        }
+
+        function forceRefresh() {
+            localStorage.removeItem(CACHE_KEY);
+            localStorage.removeItem(CACHE_KEY + '_ts');
+            lastLoadTime = 0;
+            const btn = document.getElementById('refreshBtn');
+            btn.classList.add('spinning');
+            loadDocuments().finally(() => btn.classList.remove('spinning'));
+        }
+
 
         function isValidUrl(url) {
             if (!url || typeof url !== 'string') return false;
             try {
                 const urlObj = new URL(url);
                 return urlObj.protocol === 'https:' &&
-                       (urlObj.hostname === 'drive.google.com' ||
+                    (urlObj.hostname === 'drive.google.com' ||
                         urlObj.hostname === 'script.google.com' ||
                         urlObj.hostname === 'script.googleusercontent.com');
             } catch (e) { return false; }
@@ -324,6 +567,14 @@
             const now = Date.now();
             if (now - lastLoadTime < RATE_LIMIT_MS) return;
             lastLoadTime = now;
+
+            // Try cache first
+            const cached = loadCache(CACHE_KEY, CACHE_TTL);
+            if (cached && cached.length > 0) {
+                documents = cached;
+                displayDocuments();
+                return;
+            }
 
             try {
                 const response = await fetch(DOCUMENTS_URL);
@@ -343,6 +594,7 @@
 
                 if (documents.length === 0) throw new Error('לא נמצאו מסמכים תקינים');
 
+                saveCache(CACHE_KEY, documents);
                 displayDocuments();
             } catch (error) {
                 console.error('שגיאה:', error);
@@ -384,7 +636,7 @@
                 docCard.appendChild(emojiSpan);
                 docCard.appendChild(titleDiv);
 
-                docCard.onclick = function() { openDocument(doc.url); };
+                docCard.onclick = function () { openDocument(doc.url); };
                 container.appendChild(docCard);
             });
 
@@ -412,7 +664,7 @@
         function goHome() { window.location.href = './index.html'; }
 
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) e.preventDefault();
             lastTouchEnd = now;
@@ -443,6 +695,11 @@
             <i class="fas fa-exclamation-triangle"></i>
             <span>לקחים</span>
         </a>
+        <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>הדרכה</span>
+        </a>
     </nav>
 </body>
+
 </html>

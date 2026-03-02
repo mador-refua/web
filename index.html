@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -11,10 +12,12 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
 
     <!-- Description & SEO -->
-    <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף. לומדות, בחנים, ספרות מקצועית ולקחים נלמדים.">
+    <meta name="description"
+        content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף. לומדות, בחנים, ספרות מקצועית ולקחים נלמדים.">
     <meta name="keywords" content="רפואה, פיקוד העורף, חובש, מט״ב, הכשרה רפואית">
     <meta name="author" content="מדור רפואה - פיקוד העורף">
 
@@ -33,10 +36,12 @@
     <!-- Google Fonts - Heebo for that official Hebrew military aesthetic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Theme System -->
     <link rel="stylesheet" href="theme.css">
@@ -197,8 +202,17 @@
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            50% { opacity: 0.8; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0); }
+
+            0%,
+            100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+
+            50% {
+                opacity: 0.8;
+                box-shadow: 0 0 0 4px rgba(34, 197, 94, 0);
+            }
         }
 
         .status-text {
@@ -282,7 +296,7 @@
             cursor: pointer;
             box-shadow:
                 0 4px 20px var(--orange-glow),
-                inset 0 1px 0 rgba(255,255,255,0.2);
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             animation: fadeSlideUp 0.6s ease-out 0.4s backwards;
             position: relative;
@@ -302,7 +316,7 @@
             transform: translateY(-3px) scale(1.02);
             box-shadow:
                 0 8px 30px rgba(255, 107, 53, 0.5),
-                inset 0 1px 0 rgba(255,255,255,0.3);
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .quick-practice-btn:hover::before {
@@ -422,10 +436,135 @@
         }
 
         /* Staggered animations */
-        .nav-card:nth-child(1) { animation: fadeSlideUp 0.5s ease-out 0.2s backwards; }
-        .nav-card:nth-child(2) { animation: fadeSlideUp 0.5s ease-out 0.3s backwards; }
-        .nav-card:nth-child(3) { animation: fadeSlideUp 0.5s ease-out 0.4s backwards; }
-        .nav-card:nth-child(4) { animation: fadeSlideUp 0.5s ease-out 0.5s backwards; }
+        .nav-card:nth-child(1) {
+            animation: fadeSlideUp 0.5s ease-out 0.2s backwards;
+        }
+
+        .nav-card:nth-child(2) {
+            animation: fadeSlideUp 0.5s ease-out 0.3s backwards;
+        }
+
+        .nav-card:nth-child(3) {
+            animation: fadeSlideUp 0.5s ease-out 0.4s backwards;
+        }
+
+        .nav-card:nth-child(4) {
+            animation: fadeSlideUp 0.5s ease-out 0.5s backwards;
+        }
+
+        /* ===== INSTRUCTOR SECTION ===== */
+        .instructor-section {
+            padding: 0 20px 40px;
+        }
+
+        .instructor-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(129, 140, 248, 0.08));
+            border: 1px solid rgba(129, 140, 248, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            animation: fadeSlideUp 0.5s ease-out 0.6s backwards;
+        }
+
+        .instructor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #818cf8, #6366f1);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .instructor-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(129, 140, 248, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(129, 140, 248, 0.15);
+        }
+
+        .instructor-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .instructor-card:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+
+        .instructor-card-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #818cf8, #6366f1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(129, 140, 248, 0.35);
+        }
+
+        .instructor-card-content {
+            flex: 1;
+        }
+
+        .instructor-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+            transition: color 0.3s ease;
+        }
+
+        .instructor-card:hover .instructor-card-title {
+            color: #818cf8;
+        }
+
+        .instructor-card-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .instructor-card-badge {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            background: rgba(129, 140, 248, 0.15);
+            border: 1px solid rgba(129, 140, 248, 0.3);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #818cf8;
+        }
+
+        .instructor-card-arrow {
+            width: 32px;
+            height: 32px;
+            background: rgba(129, 140, 248, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #818cf8;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+
+        .instructor-card:hover .instructor-card-arrow {
+            background: #818cf8;
+            color: white;
+            border-color: #818cf8;
+            transform: translateX(-4px);
+        }
 
         .nav-card-icon {
             width: 48px;
@@ -544,6 +683,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -555,6 +695,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -688,9 +829,9 @@
                 opacity: 0;
             }
         }
-
     </style>
 </head>
+
 <body>
     <!-- Background layers -->
     <div class="bg-image"></div>
@@ -703,8 +844,14 @@
         <!-- Header -->
         <header class="header">
             <div class="header-logos">
-                <img src="Assets/logo1.PNG" alt="פיקוד העורף">
-                <img src="Assets/logo2.PNG" alt="מדור רפואה">
+                <picture>
+                    <source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG"
+                        alt="פיקוד העורף">
+                </picture>
+                <picture>
+                    <source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG"
+                        alt="מדור רפואה">
+                </picture>
             </div>
             <div class="header-actions">
                 <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
@@ -741,7 +888,8 @@
             <div class="section-label">
                 <span class="section-label-line"></span>
                 <span class="section-label-text">מודולים</span>
-                <span class="section-label-line" style="background: linear-gradient(270deg, var(--border-light), transparent);"></span>
+                <span class="section-label-line"
+                    style="background: linear-gradient(270deg, var(--border-light), transparent);"></span>
             </div>
 
             <div class="nav-grid">
@@ -791,10 +939,34 @@
             </div>
         </section>
 
+        <!-- Instructor Section -->
+        <section class="instructor-section">
+            <div class="section-label" style="margin-bottom: 14px;">
+                <span class="section-label-line"
+                    style="background: linear-gradient(90deg, rgba(129,140,248,0.3), transparent);"></span>
+                <span class="section-label-text" style="color: #818cf8;">אזור מדריכים</span>
+                <span class="section-label-line"
+                    style="background: linear-gradient(270deg, rgba(129,140,248,0.3), transparent);"></span>
+            </div>
+
+            <div class="instructor-card" onclick="window.location.href='hadracha-page.html'">
+                <div class="instructor-card-icon">🎓</div>
+                <div class="instructor-card-content">
+                    <div class="instructor-card-title">חומרי הדרכה</div>
+                    <div class="instructor-card-subtitle">מאגר מדריכים, מצגות וחומרי עזר</div>
+                </div>
+                <span class="instructor-card-badge">מדריכים</span>
+                <div class="instructor-card-arrow">
+                    <i class="fas fa-chevron-left"></i>
+                </div>
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="footer">
             <span class="footer-text">© 2026 מדור רפואה</span>
-            <button class="footer-stats-btn" onclick="window.location.href='instructor-dashboard.html'" title="לוח בקרה למדריכים">
+            <button class="footer-stats-btn" onclick="window.location.href='instructor-dashboard.html'"
+                title="לוח בקרה למדריכים">
                 <i class="fas fa-chart-bar"></i>
                 <span>סטטיסטיקות</span>
             </button>
@@ -804,7 +976,7 @@
     <script>
         // Handle navigation card clicks with ripple effect
         document.querySelectorAll('.nav-card').forEach(card => {
-            card.addEventListener('click', function(e) {
+            card.addEventListener('click', function (e) {
                 const page = this.getAttribute('data-page');
 
                 // Create ripple effect
@@ -828,7 +1000,8 @@
                         'tutorials': 'lomdot2-page.html',
                         'quizzes': 'exams.html',
                         'literature': 'safrot-page.html',
-                        'lessons': 'lessons-learned.html'
+                        'lessons': 'lessons-learned.html',
+                        'hadracha': 'hadracha-page.html'
                     };
                     if (pages[page]) {
                         window.location.href = pages[page];
@@ -837,18 +1010,18 @@
             });
 
             // Touch feedback
-            card.addEventListener('touchstart', function() {
+            card.addEventListener('touchstart', function () {
                 this.style.transition = 'all 0.1s ease';
             }, { passive: true });
 
-            card.addEventListener('touchend', function() {
+            card.addEventListener('touchend', function () {
                 this.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
             }, { passive: true });
         });
 
         // Prevent double-tap zoom on mobile
         let lastTouchEnd = 0;
-        document.addEventListener('touchend', function(e) {
+        document.addEventListener('touchend', function (e) {
             const now = Date.now();
             if (now - lastTouchEnd <= 300) {
                 e.preventDefault();
@@ -858,4 +1031,5 @@
     </script>
 
 </body>
+
 </html>
