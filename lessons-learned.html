@@ -31,8 +31,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Theme System -->
-    <link rel="stylesheet" href="theme.css">
-    <script src="theme.js"></script>
 
     <style>
         :root {
@@ -69,7 +67,7 @@
         .bg-image {
             position: fixed;
             inset: 0;
-            background: url('Assets/background.JPEG') center center / cover no-repeat;
+            background: url('Assets/background.webp') center center / cover no-repeat;
             z-index: 0;
         }
 
@@ -477,9 +475,6 @@
                 <h1 class="page-title">לקחים מאירועים</h1>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
-                    <i class="fas fa-sun"></i>
-                </button>
                 <div class="header-logos">
                     <picture>
                         <source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG"
@@ -694,6 +689,10 @@
         <a href="lessons-learned.html" class="bottom-nav-item active">
             <i class="fas fa-exclamation-triangle"></i>
             <span>לקחים</span>
+        </a>
+        <a href="qa.html" class="bottom-nav-item">
+            <i class="fas fa-comments"></i>
+            <span>שאלות</span>
         </a>
         <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
             <i class="fas fa-chalkboard-teacher"></i>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -10,7 +11,8 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://*.google.com https://*.googleusercontent.com https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
 
     <!-- Description & Icons -->
     <meta name="description" content="מערכת למידה רפואית - מדור רפואה, פיקוד העורף">
@@ -23,12 +25,12 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Theme System -->
-    <link rel="stylesheet" href="theme.css">
-    <script src="theme.js"></script>
 
     <style>
         :root {
@@ -47,7 +49,12 @@
             --border-light: rgba(255, 255, 255, 0.1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
 
         body {
             font-family: 'Heebo', sans-serif;
@@ -58,10 +65,28 @@
             color: var(--text-primary);
         }
 
-        .bg-image { position: fixed; inset: 0; background: url('Assets/background.JPEG') center center / cover no-repeat; z-index: 0; }
-        .bg-overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26, 29, 35, 0.85) 0%, rgba(26, 29, 35, 0.75) 30%, rgba(26, 29, 35, 0.85) 70%, rgba(26, 29, 35, 0.98) 100%); z-index: 1; }
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('Assets/background.webp') center center / cover no-repeat;
+            z-index: 0;
+        }
 
-        .main-container { position: relative; z-index: 10; min-height: 100vh; max-width: 600px; margin: 0 auto; padding-bottom: 90px; }
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(26, 29, 35, 0.85) 0%, rgba(26, 29, 35, 0.75) 30%, rgba(26, 29, 35, 0.85) 70%, rgba(26, 29, 35, 0.98) 100%);
+            z-index: 1;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 90px;
+        }
 
         /* Header */
         .header {
@@ -77,27 +102,53 @@
             z-index: 100;
         }
 
-        .header-right { display: flex; align-items: center; gap: 10px; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .back-btn {
-            width: 38px; height: 38px;
+            width: 38px;
+            height: 38px;
             background: var(--charcoal-light);
             border: 1px solid var(--border-light);
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
             color: var(--text-secondary);
             font-size: 0.95rem;
         }
 
-        .back-btn:active { transform: scale(0.95); }
+        .back-btn:active {
+            transform: scale(0.95);
+        }
 
-        .page-title { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+        .page-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
 
-        .header-actions { display: flex; align-items: center; gap: 10px; }
-        .header-logos { display: flex; align-items: center; gap: 8px; }
-        .header-logos img { height: 30px; width: auto; }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logos img {
+            height: 30px;
+            width: auto;
+        }
 
         /* Search Section */
         .search-section {
@@ -124,7 +175,10 @@
             box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
 
-        .search-box i { color: var(--text-muted); font-size: 0.95rem; }
+        .search-box i {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
 
         .search-input {
             flex: 1;
@@ -136,7 +190,9 @@
             outline: none;
         }
 
-        .search-input::placeholder { color: var(--text-muted); }
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
 
         .search-clear {
             background: none;
@@ -148,7 +204,9 @@
             font-size: 0.9rem;
         }
 
-        .search-clear.show { display: block; }
+        .search-clear.show {
+            display: block;
+        }
 
         /* Stats Bar */
         .stats-bar {
@@ -163,7 +221,9 @@
             color: var(--text-muted);
         }
 
-        .video-count strong { color: var(--orange-primary); }
+        .video-count strong {
+            color: var(--orange-primary);
+        }
 
         .view-toggle {
             display: flex;
@@ -205,7 +265,9 @@
             padding: 4px 0;
         }
 
-        .category-tabs::-webkit-scrollbar { display: none; }
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
 
         .category-tab {
             flex-shrink: 0;
@@ -224,7 +286,9 @@
             font-family: 'Heebo', sans-serif;
         }
 
-        .category-tab:active { transform: scale(0.97); }
+        .category-tab:active {
+            transform: scale(0.97);
+        }
 
         .category-tab.active {
             background: linear-gradient(135deg, var(--orange-primary), var(--orange-dark));
@@ -244,7 +308,9 @@
         }
 
         /* Content Area */
-        .content { padding: 0 16px 20px; }
+        .content {
+            padding: 0 16px 20px;
+        }
 
         /* Recently Watched */
         .recent-section {
@@ -267,7 +333,10 @@
             gap: 8px;
         }
 
-        .section-title i { color: var(--orange-primary); font-size: 0.9rem; }
+        .section-title i {
+            color: var(--orange-primary);
+            font-size: 0.9rem;
+        }
 
         .clear-recent {
             background: none;
@@ -286,7 +355,9 @@
             padding: 4px 0;
         }
 
-        .recent-scroll::-webkit-scrollbar { display: none; }
+        .recent-scroll::-webkit-scrollbar {
+            display: none;
+        }
 
         .recent-card {
             flex-shrink: 0;
@@ -378,7 +449,9 @@
             font-weight: 600;
         }
 
-        .video-play i { font-size: 0.7rem; }
+        .video-play i {
+            font-size: 0.7rem;
+        }
 
         /* List View Card */
         .video-grid.list-view .video-card-inner {
@@ -439,7 +512,8 @@
         }
 
         .loading-spinner {
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             border: 4px solid var(--charcoal-lighter);
             border-top: 4px solid var(--orange-primary);
             border-radius: 50%;
@@ -447,7 +521,10 @@
             margin: 0 auto 20px;
         }
 
-        .loading-text { font-size: 1rem; color: var(--text-secondary); }
+        .loading-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
 
         .error-message {
             background: rgba(239, 68, 68, 0.1);
@@ -459,8 +536,27 @@
             text-align: center;
         }
 
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         /* Bottom Navigation */
         .bottom-nav {
@@ -495,9 +591,19 @@
             min-width: 52px;
         }
 
-        .bottom-nav-item i { font-size: 1.25rem; transition: all 0.3s ease; }
-        .bottom-nav-item.active { color: var(--orange-primary); }
-        .bottom-nav-item.active i { transform: scale(1.1); }
+        .bottom-nav-item i {
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--orange-primary);
+        }
+
+        .bottom-nav-item.active i {
+            transform: scale(1.1);
+        }
+
         .bottom-nav-item.active::before {
             content: '';
             position: absolute;
@@ -509,24 +615,64 @@
             background: var(--orange-primary);
             border-radius: 0 0 3px 3px;
         }
-        .bottom-nav-item:not(.active):active { color: var(--orange-primary); transform: scale(0.95); }
-        .bottom-nav-item.active.instructor-tab { color: #818cf8; }
-        .bottom-nav-item.active.instructor-tab::before { background: #818cf8; }
+
+        .bottom-nav-item:not(.active):active {
+            color: var(--orange-primary);
+            transform: scale(0.95);
+        }
+
+        .bottom-nav-item.active.instructor-tab {
+            color: #818cf8;
+        }
+
+        .bottom-nav-item.active.instructor-tab::before {
+            background: #818cf8;
+        }
 
         @media (max-width: 380px) {
-            .header { padding: 12px 14px; }
-            .page-title { font-size: 1.1rem; }
-            .header-logos img { height: 26px; }
-            .search-section { padding: 10px 14px 6px; }
-            .category-section { padding: 0 14px 10px; }
-            .content { padding: 0 14px 16px; }
-            .video-grid { gap: 10px; }
-            .video-card-inner { padding: 14px 12px; }
-            .video-emoji { font-size: 1.8rem; }
-            .video-title { font-size: 0.85rem; }
+            .header {
+                padding: 12px 14px;
+            }
+
+            .page-title {
+                font-size: 1.1rem;
+            }
+
+            .header-logos img {
+                height: 26px;
+            }
+
+            .search-section {
+                padding: 10px 14px 6px;
+            }
+
+            .category-section {
+                padding: 0 14px 10px;
+            }
+
+            .content {
+                padding: 0 14px 16px;
+            }
+
+            .video-grid {
+                gap: 10px;
+            }
+
+            .video-card-inner {
+                padding: 14px 12px;
+            }
+
+            .video-emoji {
+                font-size: 1.8rem;
+            }
+
+            .video-title {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="bg-image"></div>
     <div class="bg-overlay"></div>
@@ -540,12 +686,15 @@
                 <h1 class="page-title">לומדות</h1>
             </div>
             <div class="header-actions">
-                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה">
-                    <i class="fas fa-sun"></i>
-                </button>
                 <div class="header-logos">
-                    <picture><source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG" alt="Logo 1"></picture>
-                    <picture><source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG" alt="Logo 2"></picture>
+                    <picture>
+                        <source srcset="Assets/logo1.webp" type="image/webp"><img src="Assets/logo1_small.PNG"
+                            alt="Logo 1">
+                    </picture>
+                    <picture>
+                        <source srcset="Assets/logo2.webp" type="image/webp"><img src="Assets/logo2_small.PNG"
+                            alt="Logo 2">
+                    </picture>
                 </div>
             </div>
         </header>
@@ -629,21 +778,21 @@
     <script>
         const VIDEOS_URL = 'https://script.google.com/macros/s/AKfycbzT_F2coz6EOWSFER7dyRs9rq4NNLWDqTq2Xw2mQnpp3mvOS-4EKeNksK1JQrF_A3w/exec';
         const RECENT_KEY = 'lomdot_recent';
-        const VIEW_KEY   = 'lomdot_view';
-        const CACHE_KEY  = 'lomdot_cache';
-        const CACHE_TTL  = 10 * 60 * 1000; // 10 minutes
+        const VIEW_KEY = 'lomdot_view';
+        const CACHE_KEY = 'lomdot_cache';
+        const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 
         // ---- Cache helpers ----
         function saveCache(cacheKey, data) {
             try {
                 localStorage.setItem(cacheKey, JSON.stringify(data));
                 localStorage.setItem(cacheKey + '_ts', Date.now());
-            } catch(e) {}
+            } catch (e) { }
         }
         function loadCache(cacheKey, ttl) {
             const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
             if (Date.now() - ts > ttl) return null;
-            try { return JSON.parse(localStorage.getItem(cacheKey)); } catch(e) { return null; }
+            try { return JSON.parse(localStorage.getItem(cacheKey)); } catch (e) { return null; }
         }
         function showCacheAge(elId, cacheKey) {
             const ts = parseInt(localStorage.getItem(cacheKey + '_ts') || '0');
@@ -671,7 +820,7 @@
             try {
                 const urlObj = new URL(url);
                 return urlObj.protocol === 'https:' &&
-                       (urlObj.hostname === 'drive.google.com' ||
+                    (urlObj.hostname === 'drive.google.com' ||
                         urlObj.hostname === 'script.google.com' ||
                         urlObj.hostname === 'script.googleusercontent.com' ||
                         urlObj.hostname === 'www.youtube.com' ||
@@ -998,10 +1147,15 @@
             <i class="fas fa-exclamation-triangle"></i>
             <span>לקחים</span>
         </a>
+        <a href="qa.html" class="bottom-nav-item">
+            <i class="fas fa-comments"></i>
+            <span>שאלות</span>
+        </a>
         <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
             <i class="fas fa-chalkboard-teacher"></i>
             <span>הדרכה</span>
         </a>
     </nav>
 </body>
+
 </html>
