@@ -862,38 +862,6 @@
         let lastFetchTime = 0;
         const RATE_LIMIT_MS = 2000;
 
-        // ===== JSONP helper — עוקף CORS לחלוטין =====
-        function jsonp(params) {
-            return new Promise((resolve, reject) => {
-                const cbName = 'qa_cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-                const timeout = setTimeout(() => {
-                    delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    reject(new Error('timeout'));
-                }, 10000);
-
-                window[cbName] = function (data) {
-                    clearTimeout(timeout);
-                    delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
-                    resolve(data);
-                };
-
-                const query = Object.entries({ ...params, callback: cbName })
-                    .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
-                    .join('&');
-
-                const script = document.createElement('script');
-                script.src = QA_URL + '?' + query;
-                script.onerror = () => {
-                    clearTimeout(timeout);
-                    delete window[cbName];
-                    reject(new Error('network error'));
-                };
-                document.head.appendChild(script);
-            });
-        }
-
         // ===== Cache helpers =====
         function saveCache(data) {
             try {
@@ -916,7 +884,7 @@
             counter.className = 'char-counter' + (val.length > 800 ? ' warn' : '');
         }
 
-        // ===== Submit question (JSONP GET) =====
+        // ===== Submit question — GET עם action=submit (ללא CORS preflight) =====
         async function submitQuestion() {
             if (isSubmitting) return;
             const input = document.getElementById('questionInput');
@@ -932,7 +900,9 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>שולח...</span>';
 
             try {
-                const data = await jsonp({ action: 'submit', question: question.substring(0, 1000) });
+                const url = QA_URL + '?action=submit&question=' + encodeURIComponent(question.substring(0, 1000));
+                const response = await fetch(url);
+                const data = await response.json();
 
                 if (data.success) {
                     input.value = '';
@@ -961,7 +931,7 @@
             setTimeout(() => { toast.style.display = 'none'; }, 5000);
         }
 
-        // ===== Load Q&A feed (JSONP GET) =====
+        // ===== Load Q&A feed — fetch() רגיל (עובד מ-HTTPS של GitHub Pages) =====
         async function loadFeed(forceRefreshFlag = false) {
             const now = Date.now();
             if (!forceRefreshFlag && (now - lastFetchTime < RATE_LIMIT_MS)) return;
@@ -978,7 +948,9 @@
             showSkeleton();
 
             try {
-                const data = await jsonp({});
+                const response = await fetch(QA_URL);
+                if (!response.ok) throw new Error('שגיאת שרת');
+                const data = await response.json();
                 if (!data.success) throw new Error(data.error || 'שגיאה');
 
                 const items = (data.items || [])
