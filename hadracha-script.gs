@@ -27,7 +27,7 @@
  * ============================================================
  */
 
-const SHEET_NAME = 'הדרכה';
+const SHEET_NAME = 'hadracha';
 
 // Column positions (1-indexed)
 const COL = {

@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com;">
+
+    <meta name="description" content="פורום שאלות ותשובות — מדור רפואה, פיקוד העורף">
+    <link rel="icon" type="image/png" href="Assets/logo1.PNG">
+    <link rel="apple-touch-icon" href="Assets/logo1.PNG">
+    <meta name="theme-color" content="#1a1d23">
+    <meta name="apple-mobile-web-app-title" content="מדור רפואה">
+
+    <title>שאלות ותשובות | מדור רפואה</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <style>
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-bright: #FF8C42;
+            --orange-dark: #E85A24;
+            --orange-glow: rgba(255, 107, 53, 0.4);
+            --teal-primary: var(--orange-primary);
+            --teal-bright: var(--orange-bright);
+            --teal-glow: var(--orange-glow);
+            --charcoal: #1a1d23;
+            --charcoal-light: #252931;
+            --charcoal-lighter: #2f343d;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --success: #22c55e;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-light: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--charcoal);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            color: var(--text-primary);
+        }
+
+        .bg-image {
+            position: fixed;
+            inset: 0;
+            background: url('Assets/background.webp') center center / cover no-repeat;
+            z-index: 0;
+        }
+
+        .bg-overlay {
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%),
+                linear-gradient(135deg, rgba(255, 107, 53, 0.06) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .bg-vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            max-width: 500px;
+            margin: 0 auto;
+            padding-bottom: 90px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(26, 29, 35, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            background: var(--charcoal-lighter);
+            border-color: var(--teal-primary);
+            color: var(--teal-primary);
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-logos {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logos img {
+            height: 36px;
+            width: auto;
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            padding: 24px 20px 40px;
+        }
+
+        /* ===== SUBMIT FORM SECTION ===== */
+        .submit-section {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.10), rgba(255, 107, 53, 0.04));
+            border: 1px solid rgba(255, 107, 53, 0.22);
+            border-radius: 20px;
+            padding: 24px 20px;
+            margin-bottom: 32px;
+            animation: fadeSlideDown 0.5s ease-out;
+        }
+
+        .submit-section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .submit-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--teal-primary), var(--teal-bright));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px var(--teal-glow);
+        }
+
+        .submit-section-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .submit-section-sub {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .question-textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--border-light);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            resize: none;
+            min-height: 110px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            direction: rtl;
+            outline: none;
+        }
+
+        .question-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .question-textarea:focus {
+            border-color: var(--teal-primary);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+        }
+
+        .char-counter {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-align: left;
+            margin-top: 6px;
+        }
+
+        .char-counter.warn {
+            color: var(--orange-primary);
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 14px;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--teal-primary), var(--teal-bright));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Heebo', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px var(--teal-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--teal-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== SECURITY NOTICE ===== */
+        .security-notice {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .security-notice i {
+            color: var(--orange-primary);
+            font-size: 0.8rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* ===== SUCCESS / ERROR TOAST ===== */
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            margin-top: 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            animation: fadeSlideUp 0.4s ease-out;
+        }
+
+        .toast.success {
+            background: rgba(34, 197, 94, 0.12);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .toast.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        /* ===== Q&A FEED SECTION ===== */
+        .feed-section {
+            animation: fadeSlideUp 0.5s ease-out 0.15s backwards;
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .feed-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feed-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .feed-count {
+            background: var(--charcoal-lighter);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 3px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .refresh-btn {
+            width: 34px;
+            height: 34px;
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .refresh-btn:hover {
+            border-color: var(--teal-primary);
+            color: var(--teal-primary);
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.7s linear infinite;
+        }
+
+        /* Q&A Card */
+        .qa-card {
+            background: var(--charcoal-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 14px;
+            animation: fadeSlideUp 0.5s ease-out backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qa-card {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .qa-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--orange-primary), var(--orange-bright));
+            border-radius: 0 0 0 4px;
+        }
+
+        .qa-question {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .qa-q-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--teal-primary), var(--teal-bright));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .qa-question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .qa-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin-bottom: 14px;
+        }
+
+        .qa-answer {
+            display: flex;
+            gap: 10px;
+        }
+
+        .qa-a-icon {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 107, 53, 0.15);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--orange-primary);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .qa-answer-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .qa-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 12px;
+            text-align: left;
+        }
+
+        /* ===== COLLAPSIBLE ANSWER ===== */
+        .qa-answer-wrap {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+
+        .qa-card.open .qa-answer-wrap {
+            max-height: 600px;
+            opacity: 1;
+        }
+
+        .qa-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .qa-toggle-hint {
+            font-size: 0.75rem;
+            color: var(--orange-primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qa-chevron {
+            font-size: 0.8rem;
+            color: var(--orange-primary);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .qa-card.open .qa-chevron {
+            transform: rotate(180deg);
+        }
+
+        /* ===== ANIMATED TYPING LOADER ===== */
+        .typing-loader {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 48px 24px;
+            gap: 18px;
+            animation: fadeSlideUp 0.4s ease-out;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .typing-dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--orange-primary);
+            animation: typingBounce 1.2s ease-in-out infinite;
+            opacity: 0.5;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+
+            30% {
+                transform: translateY(-8px);
+                opacity: 1;
+            }
+        }
+
+        .typing-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            animation: fadeSlideUp 0.5s ease-out;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .empty-state-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ===== BOTTOM NAV ===== */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 29, 35, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom));
+            z-index: 1000;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            padding: 6px 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.62rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            min-width: 46px;
+        }
+
+        .bottom-nav-item i {
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--teal-primary);
+        }
+
+        .bottom-nav-item.active i {
+            transform: scale(1.1);
+        }
+
+        .bottom-nav-item.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--teal-primary);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .bottom-nav-item.instructor-tab.active {
+            color: #818cf8;
+        }
+
+        .bottom-nav-item.instructor-tab.active::before {
+            background: #818cf8;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 400px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .header-logos img {
+                height: 32px;
+            }
+
+            .content {
+                padding: 20px 16px 32px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-vignette"></div>
+
+    <div class="main-container">
+
+        <!-- Header -->
+        <header class="header">
+            <div class="header-right">
+                <button class="back-btn" onclick="goBack()" aria-label="חזרה">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <h1 class="page-title">שאלות ותשובות</h1>
+            </div>
+            <div class="header-logos">
+                <picture>
+                    <source srcset="Assets/logo1.webp" type="image/webp">
+                    <img src="Assets/logo1_small.PNG" alt="פיקוד העורף">
+                </picture>
+                <picture>
+                    <source srcset="Assets/logo2.webp" type="image/webp">
+                    <img src="Assets/logo2_small.PNG" alt="מדור רפואה">
+                </picture>
+            </div>
+        </header>
+
+        <div class="content">
+
+            <!-- Submit Form -->
+            <section class="submit-section">
+                <div class="submit-section-header">
+                    <div class="submit-icon">💬</div>
+                    <div>
+                        <div class="submit-section-title">שאל את ההדרכה</div>
+                        <div class="submit-section-sub">שלח שאלה — נענה בהקדם האפשרי</div>
+                    </div>
+                </div>
+
+                <textarea id="questionInput" class="question-textarea" placeholder="כתוב את שאלתך כאן..."
+                    maxlength="1000" rows="4" oninput="onTextInput()" aria-label="תיבת שאלה"></textarea>
+                <div class="char-counter" id="charCounter">0 / 1000</div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitQuestion()">
+                    <i class="fas fa-paper-plane"></i>
+                    <span>שלח שאלה</span>
+                </button>
+
+                <div class="security-notice">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>נא לשלוח שאלות שאינן מכילות תוכן <strong>רגיש, שמור, או מסווג</strong>.</span>
+                </div>
+
+                <div id="submitToast" style="display:none;"></div>
+            </section>
+
+            <!-- Q&A Feed -->
+            <section class="feed-section">
+                <div class="feed-header">
+                    <div class="feed-title-group">
+                        <span class="feed-title">📋 שאלות שנענו</span>
+                        <span class="feed-count" id="feedCount">—</span>
+                    </div>
+                    <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()" title="ריענון">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+
+                <!-- Typing loader -->
+                <div id="skeletonLoader" style="display:none;">
+                    <div class="typing-loader">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="typing-text">טוען שאלות ותשובות...</div>
+                    </div>
+                </div>
+
+                <!-- Feed list -->
+                <div id="qaFeed" style="display:none;"></div>
+
+                <!-- Empty state -->
+                <div id="emptyState" style="display:none;" class="empty-state">
+                    <div class="empty-state-icon">💭</div>
+                    <div class="empty-state-title">עדיין אין שאלות שנענו</div>
+                    <div class="empty-state-sub">הייה הראשון לשאול!<br>ההדרכה תענה בהקדם</div>
+                </div>
+
+                <!-- Error -->
+                <div id="feedError" style="display:none;" class="empty-state">
+                    <div class="empty-state-icon">⚠️</div>
+                    <div class="empty-state-title">לא ניתן לטעון שאלות</div>
+                    <div class="empty-state-sub">אנא נסה שוב מאוחר יותר</div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="bottom-nav-item">
+            <i class="fas fa-home"></i>
+            <span>בית</span>
+        </a>
+        <a href="lomdot2-page.html" class="bottom-nav-item">
+            <i class="fas fa-graduation-cap"></i>
+            <span>לומדות</span>
+        </a>
+        <a href="exams.html" class="bottom-nav-item">
+            <i class="fas fa-file-alt"></i>
+            <span>בחנים</span>
+        </a>
+        <a href="safrot-page.html" class="bottom-nav-item">
+            <i class="fas fa-book"></i>
+            <span>ספרות</span>
+        </a>
+        <a href="lessons-learned.html" class="bottom-nav-item">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>לקחים</span>
+        </a>
+        <a href="qa.html" class="bottom-nav-item active">
+            <i class="fas fa-comments"></i>
+            <span>שאלות</span>
+        </a>
+        <a href="hadracha-page.html" class="bottom-nav-item instructor-tab">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>הדרכה</span>
+        </a>
+    </nav>
+
+    <script>
+        // ⚠️ PLACEHOLDER — החלף בכתובת ה-Web App שלך אחרי פריסת qa-script.gs
+        const QA_URL = 'https://script.google.com/macros/s/AKfycbwLTIUoIFHu_eoGy-eVT03Okq69GTIG3DRoB77wa10lXBBYAjfHx5xEtjhDEH-N7y4myQ/exec';
+
+        const CACHE_KEY = 'qa_cache';
+        const CACHE_TTL = 5 * 60 * 1000; // 5 דקות
+        let isSubmitting = false;
+        let lastFetchTime = 0;
+        const RATE_LIMIT_MS = 2000;
+
+        // ===== JSONP helper — עוקף CORS לחלוטין =====
+        function jsonp(params) {
+            return new Promise((resolve, reject) => {
+                const cbName = 'qa_cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+                const timeout = setTimeout(() => {
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    reject(new Error('timeout'));
+                }, 10000);
+
+                window[cbName] = function (data) {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    resolve(data);
+                };
+
+                const query = Object.entries({ ...params, callback: cbName })
+                    .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+                    .join('&');
+
+                const script = document.createElement('script');
+                script.src = QA_URL + '?' + query;
+                script.onerror = () => {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    reject(new Error('network error'));
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        // ===== Cache helpers =====
+        function saveCache(data) {
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                localStorage.setItem(CACHE_KEY + '_ts', Date.now());
+            } catch (e) { }
+        }
+
+        function loadCache() {
+            const ts = parseInt(localStorage.getItem(CACHE_KEY + '_ts') || '0');
+            if (Date.now() - ts > CACHE_TTL) return null;
+            try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) { return null; }
+        }
+
+        // ===== Textarea counter =====
+        function onTextInput() {
+            const val = document.getElementById('questionInput').value;
+            const counter = document.getElementById('charCounter');
+            counter.textContent = val.length + ' / 1000';
+            counter.className = 'char-counter' + (val.length > 800 ? ' warn' : '');
+        }
+
+        // ===== Submit question (JSONP GET) =====
+        async function submitQuestion() {
+            if (isSubmitting) return;
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            if (!question) {
+                showToast('יש לכתוב שאלה לפני השליחה', 'error');
+                return;
+            }
+
+            isSubmitting = true;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>שולח...</span>';
+
+            try {
+                const data = await jsonp({ action: 'submit', question: question.substring(0, 1000) });
+
+                if (data.success) {
+                    input.value = '';
+                    onTextInput();
+                    showToast('השאלה נשלחה בהצלחה! ✅ נענה בהקדם', 'success');
+                } else {
+                    showToast('שגיאה בשליחה: ' + (data.error || 'נסה שוב'), 'error');
+                }
+            } catch (err) {
+                showToast('שגיאת חיבור — אנא נסה שוב', 'error');
+            } finally {
+                isSubmitting = false;
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i><span>שלח שאלה</span>';
+            }
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('submitToast');
+            const icon = type === 'success'
+                ? '<i class="fas fa-check-circle"></i>'
+                : '<i class="fas fa-exclamation-circle"></i>';
+            toast.className = 'toast ' + type;
+            toast.innerHTML = icon + '<span>' + escapeHtml(message) + '</span>';
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
+        }
+
+        // ===== Load Q&A feed (JSONP GET) =====
+        async function loadFeed(forceRefreshFlag = false) {
+            const now = Date.now();
+            if (!forceRefreshFlag && (now - lastFetchTime < RATE_LIMIT_MS)) return;
+            lastFetchTime = now;
+
+            if (!forceRefreshFlag) {
+                const cached = loadCache();
+                if (cached !== null) {
+                    renderFeed(cached);
+                    return;
+                }
+            }
+
+            showSkeleton();
+
+            try {
+                const data = await jsonp({});
+                if (!data.success) throw new Error(data.error || 'שגיאה');
+
+                const items = (data.items || [])
+                    .filter(i => i.question && i.answer)
+                    .map(i => ({
+                        question: String(i.question).substring(0, 500),
+                        answer: String(i.answer).substring(0, 2000),
+                        timestamp: i.timestamp || ''
+                    }));
+
+                saveCache(items);
+                renderFeed(items);
+            } catch (err) {
+                hideSkeleton();
+                document.getElementById('qaFeed').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'none';
+                document.getElementById('feedError').style.display = 'block';
+                document.getElementById('feedCount').textContent = '—';
+            }
+        }
+
+        function forceRefresh() {
+            localStorage.removeItem(CACHE_KEY);
+            localStorage.removeItem(CACHE_KEY + '_ts');
+            lastFetchTime = 0;
+            const btn = document.getElementById('refreshBtn');
+            btn.classList.add('spinning');
+            loadFeed(true).finally(() => btn.classList.remove('spinning'));
+        }
+
+        function showSkeleton() {
+            document.getElementById('skeletonLoader').style.display = 'block';
+            document.getElementById('qaFeed').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('feedError').style.display = 'none';
+        }
+
+        function hideSkeleton() {
+            document.getElementById('skeletonLoader').style.display = 'none';
+        }
+
+        function renderFeed(items) {
+            hideSkeleton();
+            const feed = document.getElementById('qaFeed');
+            const emptyState = document.getElementById('emptyState');
+
+            document.getElementById('feedCount').textContent = items.length > 0 ? items.length : '0';
+
+            if (items.length === 0) {
+                feed.style.display = 'none';
+                emptyState.style.display = 'block';
+                document.getElementById('feedError').style.display = 'none';
+                return;
+            }
+
+            feed.innerHTML = '';
+            items.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'qa-card';
+                card.style.animationDelay = `${0.05 * index}s`;
+
+                const dateStr = item.timestamp
+                    ? new Date(item.timestamp).toLocaleDateString('he-IL', { day: 'numeric', month: 'long', year: 'numeric' })
+                    : '';
+
+                // שאלה
+                const qRow = document.createElement('div');
+                qRow.className = 'qa-question';
+                const qIcon = document.createElement('div');
+                qIcon.className = 'qa-q-icon';
+                qIcon.textContent = 'ש';
+                const qText = document.createElement('div');
+                qText.className = 'qa-question-text';
+                qText.textContent = item.question;
+                qRow.appendChild(qIcon);
+                qRow.appendChild(qText);
+
+                // שורת toggle (לחץ לפתיחה)
+                const toggleRow = document.createElement('div');
+                toggleRow.className = 'qa-toggle-row';
+                const hint = document.createElement('div');
+                hint.className = 'qa-toggle-hint';
+                hint.innerHTML = '<i class="fas fa-comment-dots"></i> לחץ לצפייה בתשובה';
+                const chevron = document.createElement('i');
+                chevron.className = 'fas fa-chevron-down qa-chevron';
+                toggleRow.appendChild(hint);
+                toggleRow.appendChild(chevron);
+
+                // תשובה — עטופה ב-wrapper מוסתר
+                const answerWrap = document.createElement('div');
+                answerWrap.className = 'qa-answer-wrap';
+
+                const divider = document.createElement('div');
+                divider.className = 'qa-divider';
+                divider.style.marginTop = '12px';
+
+                const aRow = document.createElement('div');
+                aRow.className = 'qa-answer';
+                const aIcon = document.createElement('div');
+                aIcon.className = 'qa-a-icon';
+                aIcon.textContent = 'ת';
+                const aText = document.createElement('div');
+                aText.className = 'qa-answer-text';
+                aText.textContent = item.answer;
+                aRow.appendChild(aIcon);
+                aRow.appendChild(aText);
+
+                answerWrap.appendChild(divider);
+                answerWrap.appendChild(aRow);
+
+                if (dateStr) {
+                    const date = document.createElement('div');
+                    date.className = 'qa-date';
+                    date.textContent = dateStr;
+                    answerWrap.appendChild(date);
+                }
+
+                card.appendChild(qRow);
+                card.appendChild(toggleRow);
+                card.appendChild(answerWrap);
+
+                // toggle on click
+                card.addEventListener('click', () => {
+                    const isOpen = card.classList.contains('open');
+                    card.classList.toggle('open', !isOpen);
+                    hint.innerHTML = !isOpen
+                        ? '<i class="fas fa-comment-dots"></i> לחץ לסגירה'
+                        : '<i class="fas fa-comment-dots"></i> לחץ לצפייה בתשובה';
+                });
+
+                feed.appendChild(card);
+            });
+
+            feed.style.display = 'block';
+            emptyState.style.display = 'none';
+            document.getElementById('feedError').style.display = 'none';
+        }
+
+        // ===== Helpers =====
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = String(text);
+            return div.innerHTML;
+        }
+
+        function goBack() {
+            if (window.history.length > 1) window.history.back();
+            else window.location.href = './index.html';
+        }
+
+        // ===== Prevent double-tap zoom =====
+        let lastTouch = 0;
+        document.addEventListener('touchend', function (e) {
+            const now = Date.now();
+            if (now - lastTouch <= 300) e.preventDefault();
+            lastTouch = now;
+        }, false);
+
+        // ===== Submit on Ctrl/Cmd+Enter =====
+        document.getElementById('questionInput').addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') submitQuestion();
+        });
+
+        // ===== Init =====
+        window.addEventListener('load', () => loadFeed(false));
+
+
+        // ===== Init =====
+        window.addEventListener('load', () => loadFeed(false));
+    </script>
+
+</body>
+
+</html>

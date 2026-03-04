@@ -27,8 +27,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Theme System -->
-    <link rel="stylesheet" href="theme.css">
-    <script src="theme.js"></script>
 
     <style>
         :root {
@@ -59,7 +57,7 @@
             color: var(--text-primary);
         }
 
-        .bg-image { position: fixed; inset: 0; background: url('Assets/background.JPEG') center center / cover no-repeat; z-index: 0; }
+        .bg-image { position: fixed; inset: 0; background: url('Assets/background.webp') center center / cover no-repeat; z-index: 0; }
         .bg-overlay { position: fixed; inset: 0; background: linear-gradient(180deg, rgba(26, 29, 35, 0.75) 0%, rgba(26, 29, 35, 0.65) 30%, rgba(26, 29, 35, 0.8) 70%, rgba(26, 29, 35, 0.95) 100%), linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, transparent 50%); z-index: 1; }
         .bg-vignette { position: fixed; inset: 0; background: radial-gradient(ellipse at center, transparent 40%, rgba(26, 29, 35, 0.6) 100%); z-index: 2; pointer-events: none; }
 
@@ -375,9 +373,6 @@
             <div class="progress-section">
                 <button class="back-home-btn" id="back-home-btn" onclick="goHome()">
                     <i class="fas fa-home"></i> חזור לתפריט
-                </button>
-                <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" title="מצב תצוגה" style="margin-right: auto;">
-                    <i class="fas fa-sun"></i>
                 </button>
                 <div class="progress-info">
                     <div class="progress-text">התקדמות: <span id="progress-num">0/25</span></div>
