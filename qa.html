@@ -862,6 +862,38 @@
         let lastFetchTime = 0;
         const RATE_LIMIT_MS = 2000;
 
+        // ===== JSONP — מעקף CORS מלא (עובד על GitHub Pages ו-file://) =====
+        function jsonp(params) {
+            return new Promise((resolve, reject) => {
+                const cbName = 'qa_cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+                const timeout = setTimeout(() => {
+                    delete window[cbName];
+                    if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+                    reject(new Error('timeout'));
+                }, 12000);
+
+                window[cbName] = function (data) {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    if (scriptEl && scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+                    resolve(data);
+                };
+
+                const query = Object.entries({ ...params, callback: cbName })
+                    .map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v))
+                    .join('&');
+
+                const scriptEl = document.createElement('script');
+                scriptEl.src = QA_URL + '?' + query;
+                scriptEl.onerror = () => {
+                    clearTimeout(timeout);
+                    delete window[cbName];
+                    reject(new Error('network error'));
+                };
+                document.head.appendChild(scriptEl);
+            });
+        }
+
         // ===== Cache helpers =====
         function saveCache(data) {
             try {
@@ -884,7 +916,7 @@
             counter.className = 'char-counter' + (val.length > 800 ? ' warn' : '');
         }
 
-        // ===== Submit question — GET עם action=submit (ללא CORS preflight) =====
+        // ===== Submit question — JSONP GET =====
         async function submitQuestion() {
             if (isSubmitting) return;
             const input = document.getElementById('questionInput');
@@ -900,9 +932,7 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>שולח...</span>';
 
             try {
-                const url = QA_URL + '?action=submit&question=' + encodeURIComponent(question.substring(0, 1000));
-                const response = await fetch(url);
-                const data = await response.json();
+                const data = await jsonp({ action: 'submit', question: question.substring(0, 1000) });
 
                 if (data.success) {
                     input.value = '';
@@ -931,7 +961,7 @@
             setTimeout(() => { toast.style.display = 'none'; }, 5000);
         }
 
-        // ===== Load Q&A feed — fetch() רגיל (עובד מ-HTTPS של GitHub Pages) =====
+        // ===== Load Q&A feed — JSONP =====
         async function loadFeed(forceRefreshFlag = false) {
             const now = Date.now();
             if (!forceRefreshFlag && (now - lastFetchTime < RATE_LIMIT_MS)) return;
@@ -939,18 +969,13 @@
 
             if (!forceRefreshFlag) {
                 const cached = loadCache();
-                if (cached !== null) {
-                    renderFeed(cached);
-                    return;
-                }
+                if (cached !== null) { renderFeed(cached); return; }
             }
 
             showSkeleton();
 
             try {
-                const response = await fetch(QA_URL);
-                if (!response.ok) throw new Error('שגיאת שרת');
-                const data = await response.json();
+                const data = await jsonp({});
                 if (!data.success) throw new Error(data.error || 'שגיאה');
 
                 const items = (data.items || [])
