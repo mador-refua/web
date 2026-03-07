@@ -13,7 +13,7 @@
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://drive.google.com https://www.youtube.com;">
 
     <!-- Description & SEO -->
     <meta name="description"
@@ -1014,6 +1014,88 @@
                 opacity: 0;
             }
         }
+
+        /* ===== VIDEO POPUP ===== */
+        .video-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 12, 16, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .video-popup-overlay.visible {
+            opacity: 1;
+        }
+
+        .video-popup-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .video-popup-container {
+            position: relative;
+            width: min(90vw, calc(90vh * 9 / 16));
+            /* 9:16 portrait */
+            aspect-ratio: 9 / 16;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow:
+                0 0 0 1px rgba(255, 107, 53, 0.2),
+                0 30px 80px rgba(0, 0, 0, 0.7),
+                0 0 60px rgba(255, 107, 53, 0.1);
+            transform: scale(0.92);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .video-popup-overlay.visible .video-popup-container {
+            transform: scale(1);
+        }
+
+        .video-popup-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .video-popup-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(26, 29, 35, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .video-popup-close:hover {
+            background: rgba(255, 107, 53, 0.9);
+            border-color: var(--orange-primary);
+            transform: scale(1.1);
+        }
+
+        .video-popup-close:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 
@@ -1024,6 +1106,17 @@
     <div class="bg-vignette"></div>
     <div class="bg-noise"></div>
     <div class="bg-glow"></div>
+
+    <!-- One-time YouTube Video Popup -->
+    <div class="video-popup-overlay" id="videoPopupOverlay" role="dialog" aria-modal="true" aria-label="סרטון פתיחה">
+        <div class="video-popup-container">
+            <button class="video-popup-close" id="videoPopupClose" aria-label="סגור סרטון" title="סגור">
+                <i class="fas fa-times"></i>
+            </button>
+            <iframe id="videoPopupIframe" src="" allow="autoplay; encrypted-media" allowfullscreen
+                title="סרטון פתיחה"></iframe>
+        </div>
+    </div>
 
     <div class="main-container">
         <!-- Header -->
@@ -1225,6 +1318,55 @@
             }
             lastTouchEnd = now;
         }, false);
+
+        // ===== VIDEO POPUP (on every fresh site entry) =====
+        (function () {
+            const VIDEO_ID = 'MT8fmjfsTcY';
+
+            const overlay = document.getElementById('videoPopupOverlay');
+            const closeBtn = document.getElementById('videoPopupClose');
+            const iframe = document.getElementById('videoPopupIframe');
+
+            function closePopup() {
+                overlay.classList.remove('visible');
+                overlay.classList.add('hidden');
+                // Stop the video by clearing src
+                iframe.src = '';
+            }
+
+            // Show only when arriving fresh (not from within the same site)
+            function isInternalNavigation() {
+                if (!document.referrer) return false;
+                try {
+                    return new URL(document.referrer).hostname === window.location.hostname;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            if (!isInternalNavigation()) {
+                // Fresh entry — show the popup
+                setTimeout(function () {
+                    iframe.src = 'https://www.youtube.com/embed/' + VIDEO_ID + '?playsinline=1&rel=0';
+                    overlay.classList.add('visible');
+                }, 600);
+            } else {
+                // Internal navigation (e.g. came back from another page) — hide
+                overlay.classList.add('hidden');
+            }
+
+            closeBtn.addEventListener('click', closePopup);
+
+            // Also close when clicking the dark overlay background
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) closePopup();
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closePopup();
+            });
+        })();
     </script>
 
     <!-- Bottom Navigation -->
